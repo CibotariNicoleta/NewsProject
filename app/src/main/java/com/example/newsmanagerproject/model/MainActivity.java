@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-       /* recyclerView = (ListView) findViewById(R.id.list);
+        recyclerView = (ListView) findViewById(R.id.list);
            Image imga = new Image(R.drawable.a);
             Article a = new Article("1" , "The impact of nature", "blablabla", "bblablabla", imga);
             myArticles.add(a);
@@ -61,10 +61,15 @@ public class MainActivity extends AppCompatActivity {
         myArticles.add(f);
         //myAdapter = new ArrayAdapter<Adapter>(this, android.R.layout.simple_list_item_1);
         myAdapter = new NewsAdapter(this, myArticles);
-        recyclerView.setAdapter(myAdapter);*/
+        recyclerView.setAdapter(myAdapter);
 
         loginButon= (Button) findViewById(R.id.button2);
-
+        loginButon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goLogin(v);
+            }
+        });
     }
 
     public void goLogin(View view){
