@@ -5,14 +5,17 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.newsmanagerproject.Login;
 import com.example.newsmanagerproject.R;
 import com.example.newsmanagerproject.model.Article;
 import com.example.newsmanagerproject.model.Image;
@@ -59,6 +62,11 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(myAdapter);
 
 
+    }
+
+    public void goLogin(View view){
+        Intent intent=new Intent(this, Login.class);
+        startActivity(intent);
 
     }
 
