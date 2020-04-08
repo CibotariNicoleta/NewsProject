@@ -57,43 +57,5 @@ public class NewsAdapter extends ArrayAdapter<Article>{
         return listItem;
     }
 
-  /*  private int layoutResourceId;
 
-    private static final String LOG_TAG = "Adapter";
-
-    public Adapter(Context context, int textViewResourceId) {
-        super(context, textViewResourceId);
-        layoutResourceId = textViewResourceId;
-    }
-
-    public View getView(int position, View convertView, ViewGroup parent) {
-        try {
-            Article item = getItem(position);
-            View v = null;
-            if (convertView == null) {
-                LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-                v = inflater.inflate(layoutResourceId, null);
-
-            } else {
-                v = convertView;
-            }
-
-            TextView title = (TextView) v.findViewById(R.id.newsTitle);
-            TextView subtitle = (TextView) v.findViewById(R.id.newsSubtitle);
-            TextView Abstract = (TextView) v.findViewById(R.id.newsAbstract);
-            ImageView img = (ImageView) v.findViewById(R.id.image);
-
-            title.setText(item.getTitle());
-            subtitle.setText(item.getSubtitle());
-            Abstract.setText(item.getAbstract());
-            img.setImageResource(item.getImage().getId());
-
-
-            return v;
-        } catch (Exception ex) {
-            Log.e(LOG_TAG, "error", ex);
-            return null;
-        }
-    }*/
 }
