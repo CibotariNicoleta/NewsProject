@@ -63,6 +63,8 @@ public class MainActivity extends AppCompatActivity {
         myAdapter = new NewsAdapter(this, myArticles);
         recyclerView.setAdapter(myAdapter);
 
+
+
         loginButon= (Button) findViewById(R.id.button2);
         loginButon.setOnClickListener(new View.OnClickListener() {
             @Override

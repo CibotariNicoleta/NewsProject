@@ -8,12 +8,13 @@
     >
 
     <FrameLayout
+        android:id="@+id/frameLayout"
         android:layout_width="420dp"
         android:layout_height="400dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_marginEnd="21dp"
-        android:layout_marginRight="21dp">
+        android:layout_marginEnd="13dp"
+        android:layout_marginRight="0dp">
 
         <ImageView
             android:id="@+id/image"
