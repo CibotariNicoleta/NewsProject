@@ -10,7 +10,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".model.NewsArticle">
+        <activity
+            android:name=".model.NewsArticle"
             android:parentActivityName=".model.MainActivity">
             <!-- The meta-data tag is required if you support API level 15 and lower -->
             <meta-data
