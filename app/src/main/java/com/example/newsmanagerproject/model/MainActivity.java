@@ -38,26 +38,26 @@ public class MainActivity extends AppCompatActivity {
 
         recyclerView = (ListView) findViewById(R.id.list);
            Image imga = new Image(R.drawable.a);
-            Article a = new Article("1" , "The impact of nature", "blablabla", "bblablabla", imga);
+            Article a = new Article("1" , "The impact of nature", "blablabla",  "bblablabla", "nature",imga);
             myArticles.add(a);
         Image imgb = new Image(R.drawable.b);
-        Article b = new Article(" 2" , "The impact of nature", "blablabla", "bblablabla", imgb);
+        Article b = new Article(" 2" , "The impact of nature", "blablabla",  "bblablabla","nature", imgb);
         myArticles.add(b);
 
         Image imgc = new Image(R.drawable.c);
-        Article c = new Article(" 3" , "The impact of nature", "blablabla", "bblablabla", imgc);
+        Article c = new Article(" 3" , "The impact of nature", "blablabla", "bblablabla", "nature", imgc);
         myArticles.add(c);
 
         Image imgd = new Image(R.drawable.d);
-        Article d = new Article("4" , "The impact of nature", "blablabla", "bblablabla", imgd);
+        Article d = new Article("4" , "The impact of nature", "blablabla", "bblablabla", "nature", imgd);
         myArticles.add(d);
 
         Image imge = new Image(R.drawable.e);
-        Article e = new Article("5" , "The impact of nature", "blablabla", "bblablabla", imge);
+        Article e = new Article("5" , "The impact of nature", "blablabla", "bblablabla", "nature",  imge);
         myArticles.add(e);
 
         Image imgf = new Image(R.drawable.f);
-        Article f = new Article("6" , "The impact of nature", "blablabla", "bblablabla", imgf);
+        Article f = new Article("6" , "The impact of nature", "blablabla", "bblablabla", "nature", imgf);
         myArticles.add(f);
         //myAdapter = new ArrayAdapter<Adapter>(this, android.R.layout.simple_list_item_1);
         myAdapter = new NewsAdapter(this, myArticles);
@@ -71,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+    
 
     public void goLogin(View view){
 

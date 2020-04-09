@@ -45,14 +45,14 @@ public class NewsAdapter extends ArrayAdapter<Article>{
         ImageView image = (ImageView)listItem.findViewById(R.id.image);
         image.setImageResource(article.getImage().getId());
 
+        TextView category = (TextView) listItem.findViewById(R.id.newsCategory);
+        category.setText(article.getCategory());
+
         TextView title = (TextView) listItem.findViewById(R.id.newsTitle);
         title.setText(article.getTitle());
 
-        TextView subtitle = (TextView) listItem.findViewById(R.id.newsSubtitle);
-        subtitle.setText(article.getSubtitle());
-
-        TextView Abstract = (TextView) listItem.findViewById(R.id.newsSubtitle);
-        subtitle.setText(article.getAbstract());
+        TextView Abstract = (TextView) listItem.findViewById(R.id.newsAbstract);
+        Abstract.setText(article.getAbstract());
 
         return listItem;
     }

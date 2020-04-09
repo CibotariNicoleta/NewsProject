@@ -23,7 +23,7 @@
             android:scaleType="centerCrop" />
 
         <TextView
-            android:id="@+id/newsTitle"
+            android:id="@+id/newsCategory"
             android:layout_width="169dp"
             android:layout_height="70dp"
             android:text="Title"
@@ -47,7 +47,7 @@
             android:textSize="25sp" />
 
         <TextView
-            android:id="@+id/newsSubtitle"
+            android:id="@+id/newsTitle"
             android:layout_width="378dp"
             android:layout_height="108dp"
             android:layout_gravity="center"
