@@ -1,8 +1,13 @@
 package com.example.newsmanagerproject.network;
 
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
+
 import java.io.IOException;
 
 import com.example.newsmanagerproject.model.Article;
+import com.example.newsmanagerproject.model.Image;
 import com.example.newsmanagerproject.network.errors.AuthenticationError;
 import com.example.newsmanagerproject.network.errors.ServerComnmunicationError;
 import java.net.HttpURLConnection;
@@ -133,6 +138,7 @@ public class ModelManager {
      * @return the list of articles in remote service
      * @throws ServerComnmunicationError
      */
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public static List<Article> getArticles() throws ServerComnmunicationError{
         return getArticles(-1,-1);
     }
@@ -142,6 +148,7 @@ public class ModelManager {
      * @return the list of articles in remote service with pagination
      * @throws ServerComnmunicationError
      */
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public static List<Article> getArticles(int buffer, int offset) throws ServerComnmunicationError{
         String limits = "";
         if (buffer>0 && offset >=0){
@@ -191,6 +198,7 @@ public class ModelManager {
      * @return the list of articles in remote service with pagination
      * @throws ServerComnmunicationError
      */
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public static List<Article> getArticlesFrom(int buffer, int offset) throws ServerComnmunicationError{
         String limits = "";
         if (buffer>0 && offset >=0){
@@ -240,6 +248,7 @@ public class ModelManager {
      * @return the article in remote service with id idArticle
      * @throws ServerComnmunicationError
      */
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public static Article getArticle(int idArticle) throws ServerComnmunicationError{
 
         Article result = null;
