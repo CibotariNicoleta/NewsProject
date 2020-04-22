@@ -18,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.newsmanagerproject.R;
+import com.example.newsmanagerproject.network.errors.ServerComnmunicationError;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -48,16 +49,20 @@ public class NewsAdapter extends ArrayAdapter<Article>{
       //  image.setImageResource(article.getImage().getId());
 
         ImageView image = (ImageView)listItem.findViewById(R.id.image);
-        image.setImageResource(article.getImage().getId());
+        try {
+            image.setImageResource(article.getImage().getId());
+        } catch (ServerComnmunicationError serverComnmunicationError) {
+            serverComnmunicationError.printStackTrace();
+        }
 
         TextView category = (TextView) listItem.findViewById(R.id.newsCategory);
         category.setText(article.getCategory());
 
         TextView title = (TextView) listItem.findViewById(R.id.newsTitle);
-        title.setText(article.getTitle());
+        title.setText(article.getTitleText());
 
         TextView Abstract = (TextView) listItem.findViewById(R.id.newsAbstract);
-        Abstract.setText(article.getAbstract());
+        Abstract.setText(article.getAbstractText());
 
 
 //        frameLayout=(FrameLayout) listItem.findViewById(R.id.frameLayout);

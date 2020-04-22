@@ -23,7 +23,7 @@ import org.json.simple.JSONObject;
 import static com.example.newsmanagerproject.network.ServiceCallUtils.parseHttpStreamResult;
 
 public class ModelManager {
-    private static RESTConnection rc = null;
+    private static RESTConnection rc;
 
     public static boolean isConnected(){
         return rc.idUser!=null;

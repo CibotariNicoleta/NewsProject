@@ -22,9 +22,9 @@ public class RESTConnection {
 
     protected boolean requireSelfSigned = false;
 
-    public static final String ATTR_LOGIN_USER = "username";
-    public static final String ATTR_LOGIN_PASS = "password";
-    public static final String ATTR_SERVICE_URL = "service_url";
+    public static final String ATTR_LOGIN_USER = "DEV_TEAM_09"; //here
+    public static final String ATTR_LOGIN_PASS = "65424"; //here
+    public static final String ATTR_SERVICE_URL = "https://sanger.dia.fi.upm.es/pmd-task/"; // added here
     public static final String ATTR_REQUIRE_SELF_CERT = "require_self_signed_cert";
     public static final String ATTR_PROXY_HOST = "";
     public static final String ATTR_PROXY_PORT = "";
