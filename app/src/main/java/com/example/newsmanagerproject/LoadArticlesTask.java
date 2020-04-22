@@ -17,6 +17,7 @@ import com.example.newsmanagerproject.network.errors.ServerComnmunicationError;
 import java.util.List;
 import java.util.Properties;
 
+import static com.example.newsmanagerproject.network.RESTConnection.ATTR_REQUIRE_SELF_CERT;
 import static com.example.newsmanagerproject.network.RESTConnection.ATTR_SERVICE_URL;
 
 public class LoadArticlesTask  extends AsyncTask<Void, Void, List<Article>> {
@@ -35,6 +36,7 @@ public class LoadArticlesTask  extends AsyncTask<Void, Void, List<Article>> {
         //added here
         Properties p = new Properties();
         p.put(ATTR_SERVICE_URL, "https://sanger.dia.fi.upm.es/pmd-task/");
+        p.put(ATTR_REQUIRE_SELF_CERT,"TRUE");
         ModelManager.configureConnection(p);
        String strIdUser = ModelManager.getIdUser(), strApiKey = ModelManager.getLoggedApiKey(), strIdAuthUser = ModelManager.getLoggedAuthType();
         //ModelManager uses singleton pattern, connecting once per app execution in enough
@@ -42,7 +44,7 @@ public class LoadArticlesTask  extends AsyncTask<Void, Void, List<Article>> {
             // if it is the first login
             if (ModelManager.getIdUser() == null || ModelManager.getIdUser().equals("")) {
                 try {
-                    ModelManager.login("ws_user", "ws_password");
+                    ModelManager.login("DEV_TEAM_09", "65424");
                 } catch (AuthenticationError e) {
                     Log.e(TAG, e.getMessage());
                 }
@@ -56,6 +58,9 @@ public class LoadArticlesTask  extends AsyncTask<Void, Void, List<Article>> {
         if (ModelManager.isConnected()) {
             try {
                 // obtain 6 articles from offset 0
+                Log.d("El usuario es ->",ModelManager.getIdUser() );
+                Log.d("Con la clave de API->" ,ModelManager.getLoggedApiKey() );
+                //System.out.println("El usuario es ->"+ ModelManager.getIdUser() +"Con la clave de API->" +ModelManager.getLoggedApiKey());//BORRAR
                 res = ModelManager.getArticles(6, 0);
                 for (Article article : res) {
                     // We print articles in Log
@@ -71,5 +76,8 @@ public class LoadArticlesTask  extends AsyncTask<Void, Void, List<Article>> {
         return res;
     }
 
+    public void postExecute(List<Article> res){
+
+    }
 }
 

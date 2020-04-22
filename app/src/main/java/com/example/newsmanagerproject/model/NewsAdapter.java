@@ -30,7 +30,7 @@ public class NewsAdapter extends ArrayAdapter<Article>{
     private List<Article> articles = new ArrayList<>();
     private FrameLayout frameLayout;
 
-    public NewsAdapter(@NonNull Context context,  ArrayList<Article> list) {
+    public NewsAdapter(@NonNull Context context,  List<Article> list) {
         super(context, 0 , list);
         mContext = context;
         articles = list;
@@ -50,7 +50,8 @@ public class NewsAdapter extends ArrayAdapter<Article>{
 
         ImageView image = (ImageView)listItem.findViewById(R.id.image);
         try {
-            image.setImageResource(article.getImage().getId());
+            image.setImageResource(article.getImage().hashCode());
+            //image.setImageResource(article.getImage().getId());
         } catch (ServerComnmunicationError serverComnmunicationError) {
             serverComnmunicationError.printStackTrace();
         }

@@ -25,6 +25,7 @@ import com.example.newsmanagerproject.model.Image;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -37,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         recyclerView = (ListView) findViewById(R.id.list);
         loadArticlesTask = new LoadArticlesTask(this);
@@ -64,9 +66,16 @@ public class MainActivity extends AppCompatActivity {
         myArticles.add(f); */
         //myAdapter = new ArrayAdapter<Adapter>(this, android.R.layout.simple_list_item_1);
 
-     loadArticlesTask.execute();
+        List<Article> listRes = null;
+        try {
+            listRes = loadArticlesTask.execute().get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
-        myAdapter = new NewsAdapter(this, myArticles);
+        myAdapter = new NewsAdapter(this, listRes);
         recyclerView.setAdapter(myAdapter);
 
 
@@ -88,8 +97,8 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-public void getResult(List<Article> myList)
-{
-    myArticles = (ArrayList<Article>) myList;
-}
+    public void getResult(List<Article> myList)
+    {
+        myArticles = (ArrayList<Article>) myList;
+    }
 }

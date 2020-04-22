@@ -115,6 +115,7 @@ public class Article extends ModelEntity {
     public int getIdUser(){
         return idUser;
     }
+
     public Image getImage() throws ServerComnmunicationError {
         Image image = mainImage;
         if (mainImage==null && thumbnail!=null && !thumbnail.isEmpty()){
