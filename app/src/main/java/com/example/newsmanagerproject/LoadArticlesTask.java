@@ -67,7 +67,7 @@ public class LoadArticlesTask  extends AsyncTask<Void, Void, List<Article>> {
         }
         // added here
         ((MainActivity)context).getResult(res);
-        Toast.makeText(context, res.toString(), Toast.LENGTH_SHORT).show(); // res is null
+        //Toast.makeText(context, res.toString(), Toast.LENGTH_SHORT).show(); // res is null
         return res;
     }
 
