@@ -65,6 +65,7 @@ public class LoadArticlesTask  extends AsyncTask<Void, Void, List<Article>> {
                 for (Article article : res) {
                     // We print articles in Log
                     Log.i(TAG, String.valueOf(article));
+
                 }
             } catch (ServerComnmunicationError e) {
                 Log.e(TAG,e.getMessage());

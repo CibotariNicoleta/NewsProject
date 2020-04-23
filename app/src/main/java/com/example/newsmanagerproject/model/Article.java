@@ -121,6 +121,8 @@ public class Article extends ModelEntity {
         if (mainImage==null && thumbnail!=null && !thumbnail.isEmpty()){
             image = new Image(1,"",getId(),thumbnail);
         }
+
+
         return image;
     }
 

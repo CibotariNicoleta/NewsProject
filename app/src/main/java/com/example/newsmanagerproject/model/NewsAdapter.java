@@ -2,8 +2,11 @@ package com.example.newsmanagerproject.model;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Movie;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,13 +51,19 @@ public class NewsAdapter extends ArrayAdapter<Article>{
       //  ImageView image = (ImageView)listItem.findViewById(R.id.image);
       //  image.setImageResource(article.getImage().getId());
 
-        ImageView image = (ImageView)listItem.findViewById(R.id.image);
+        ImageView image = listItem.findViewById(R.id.image);
+
+        byte[] decodedString = new byte[0];
         try {
-            image.setImageResource(article.getImage().hashCode());
-            //image.setImageResource(article.getImage().getId());
+            decodedString = Base64.decode(article.getImage().getImage(), Base64.DEFAULT);
         } catch (ServerComnmunicationError serverComnmunicationError) {
             serverComnmunicationError.printStackTrace();
         }
+        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+            //image.setImageResource(article.getImage().getId());
+        image.setImageBitmap(decodedByte);
+
+
 
         TextView category = (TextView) listItem.findViewById(R.id.newsCategory);
         category.setText(article.getCategory());
