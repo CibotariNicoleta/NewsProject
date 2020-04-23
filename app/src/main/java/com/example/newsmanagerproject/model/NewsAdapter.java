@@ -60,7 +60,6 @@ public class NewsAdapter extends ArrayAdapter<Article>{
             serverComnmunicationError.printStackTrace();
         }
         Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-            //image.setImageResource(article.getImage().getId());
         image.setImageBitmap(decodedByte);
 
 
