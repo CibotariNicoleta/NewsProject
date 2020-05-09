@@ -1,59 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout
-    android:orientation="vertical"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/relativeLayout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    >
+    android:layout_height="600dp">
 
-    <FrameLayout
-        android:id="@+id/frameLayout"
-        android:layout_width="420dp"
-        android:layout_height="400dp"
+    <ImageView
+        android:id="@+id/image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleType="fitXY"
+        android:adjustViewBounds="false"
+        />
+
+    <TextView
+        android:id="@+id/newsCategory"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginBottom="30dp"
+        android:gravity="center"
+        android:text="@string/category"
+        android:textColor="@android:color/black"
+        android:textSize="25sp" />
+
+    <TextView
+        android:id="@+id/newsTitle"
+        android:layout_width="378dp"
+        android:layout_height="108dp"
+        android:layout_below="@id/newsCategory"
+        android:layout_centerHorizontal="true"
+        android:gravity="center_horizontal"
+        android:text="@string/tittle"
+        android:textColor="@android:color/black"
+        android:textSize="25sp" />
+
+    <TextView
+        android:id="@+id/newsAbstract"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_height="200dp"
+        android:layout_below="@id/newsTitle"
+        android:text="@string/newsabstract"
+        android:textColor="@android:color/black"
+        android:textSize="12sp" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/deleteButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_marginEnd="13dp"
-        android:layout_marginRight="0dp">
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginEnd="268dp"
+        android:layout_marginRight="268dp"
+        android:layout_marginBottom="92dp"
+        android:clickable="true"
+        app:srcCompat="@drawable/ic_delete_black_24dp" />
 
-        <ImageView
-            android:id="@+id/image"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:scaleType="centerCrop" />
-
-        <TextView
-            android:id="@+id/newsCategory"
-            android:layout_width="169dp"
-            android:layout_height="70dp"
-            android:text="Title"
-            android:textColor="@android:color/background_light"
-            android:textSize="25sp">
-
-        </TextView>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/modifyButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="270dp"
+        android:layout_marginLeft="270dp"
+        android:layout_marginBottom="92dp"
+        android:clickable="true"
+        app:srcCompat="@drawable/ic_update_black_24dp" />
 
 
-        <TextView
-            android:id="@+id/newsAbstract"
-            android:layout_width="417dp"
-            android:layout_height="137dp"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_gravity="bottom"
-            android:layout_marginEnd="10dp"
-            android:layout_marginRight="10dp"
-            android:text="Abstract"
-            android:textColor="@android:color/background_light"
-            android:textSize="25sp" />
-
-        <TextView
-            android:id="@+id/newsTitle"
-            android:layout_width="378dp"
-            android:layout_height="108dp"
-            android:layout_gravity="center"
-            android:text="Subtitle"
-            android:textColor="@android:color/background_light"
-            android:textSize="25sp" />
-    </FrameLayout>
 </RelativeLayout>

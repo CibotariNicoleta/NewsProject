@@ -4,6 +4,7 @@ import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Hashtable;
 
@@ -13,7 +14,7 @@ import com.example.newsmanagerproject.model.SerializationUtils;
 import com.example.newsmanagerproject.network.errors.ServerComnmunicationError;
 
 
-public class Article extends ModelEntity {
+public class Article extends ModelEntity implements Serializable {
 
     private String titleText;
     private String category;

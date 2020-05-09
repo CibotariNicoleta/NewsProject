@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Adapter;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListAdapter;
@@ -21,6 +22,8 @@ import com.example.newsmanagerproject.Login;
 import com.example.newsmanagerproject.R;
 import com.example.newsmanagerproject.model.Article;
 import com.example.newsmanagerproject.model.Image;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -33,40 +36,18 @@ public class MainActivity extends AppCompatActivity {
     private ListView recyclerView;
     private NewsAdapter myAdapter;
     private LoadArticlesTask loadArticlesTask;
-    private Button loginButon;
+    private FloatingActionButton loginButon;
+    private NewsArticle newsArticle;
+    private List<Article> listRes;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         recyclerView = (ListView) findViewById(R.id.list);
         loadArticlesTask = new LoadArticlesTask(this);
-      /*     Image imga = new Image(R.drawable.a);
-            Article a = new Article("1" , "The impact of nature", "blablabla",  "bblablabla", "nature",imga);
-            myArticles.add(a);
-        Image imgb = new Image(R.drawable.b);
-        Article b = new Article(" 2" , "The impact of nature", "blablabla",  "bblablabla","nature", imgb);
-        myArticles.add(b);
-
-        Image imgc = new Image(R.drawable.c);
-        Article c = new Article(" 3" , "The impact of nature", "blablabla", "bblablabla", "nature", imgc);
-        myArticles.add(c);
-
-        Image imgd = new Image(R.drawable.d);
-        Article d = new Article("4" , "The impact of nature", "blablabla", "bblablabla", "nature", imgd);
-        myArticles.add(d);
-
-        Image imge = new Image(R.drawable.e);
-        Article e = new Article("5" , "The impact of nature", "blablabla", "bblablabla", "nature",  imge);
-        myArticles.add(e);
-
-        Image imgf = new Image(R.drawable.f);
-        Article f = new Article("6" , "The impact of nature", "blablabla", "bblablabla", "nature", imgf);
-        myArticles.add(f); */
-        //myAdapter = new ArrayAdapter<Adapter>(this, android.R.layout.simple_list_item_1);
-
-        List<Article> listRes = null;
+        listRes = null;
         try {
             listRes = loadArticlesTask.execute().get();
         } catch (ExecutionException e) {
@@ -78,9 +59,19 @@ public class MainActivity extends AppCompatActivity {
         myAdapter = new NewsAdapter(this, listRes);
         recyclerView.setAdapter(myAdapter);
 
+        // This let us set every item clickable
+        recyclerView.setClickable(true);
+        recyclerView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Snackbar.make(view,"Element clicked -> "+ position,Snackbar.LENGTH_LONG).show();
+                Log.i("Click", "click en el elemento " + position + " de mi ListView");
+                goNewsArticle(view,position);
+            }
+        });
 
-        loginButon= (Button) findViewById(R.id.button2);
+        loginButon= (FloatingActionButton) findViewById(R.id.loginButton);
         loginButon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -96,6 +87,17 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
 
     }
+    //Method that permit acces to the NewArticle class
+    public void goNewsArticle(View view,int position){
+        Intent intentNewsArticle=new Intent(this,NewsArticle.class);
+
+        //Bundle bundle = new Bundle();
+        //bundle.putSerializable("Article", listRes.get(position));
+
+        intentNewsArticle.putExtra("Article",listRes.get(position));
+        startActivity(intentNewsArticle);
+    }
+
 
     public void getResult(List<Article> myList)
     {

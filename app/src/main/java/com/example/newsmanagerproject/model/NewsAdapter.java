@@ -1,5 +1,6 @@
 package com.example.newsmanagerproject.model;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -12,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -22,6 +24,8 @@ import androidx.annotation.Nullable;
 
 import com.example.newsmanagerproject.R;
 import com.example.newsmanagerproject.network.errors.ServerComnmunicationError;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -29,16 +33,20 @@ import java.util.List;
 
 public class NewsAdapter extends ArrayAdapter<Article>{
 
+
     private Context mContext;
     private List<Article> articles = new ArrayList<>();
     private FrameLayout frameLayout;
+    private FloatingActionButton deleteButton;
+    private FloatingActionButton modifyButton;
 
     public NewsAdapter(@NonNull Context context,  List<Article> list) {
         super(context, 0 , list);
-        mContext = context;
+        this.mContext = context;
         articles = list;
     }
 
+    @SuppressLint("RestrictedApi")
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
@@ -46,23 +54,31 @@ public class NewsAdapter extends ArrayAdapter<Article>{
         if(listItem == null)
             listItem = LayoutInflater.from(mContext).inflate(R.layout.list_item, parent,false);
 
-        final Article article = articles.get(position);
+        deleteButton=(FloatingActionButton) listItem.findViewById(R.id.deleteButton);
+        modifyButton=(FloatingActionButton) listItem.findViewById(R.id.modifyButton);
 
-      //  ImageView image = (ImageView)listItem.findViewById(R.id.image);
-      //  image.setImageResource(article.getImage().getId());
+        if(!isLogged()){
+            deleteButton.setVisibility(View.GONE);
+            modifyButton.setVisibility(View.GONE);
+        }
+
+        final Article article = articles.get(position);
 
         ImageView image = listItem.findViewById(R.id.image);
 
+        //Array of bytes
         byte[] decodedString = new byte[0];
+
+        //Decode array of character to store on byte format
         try {
             decodedString = Base64.decode(article.getImage().getImage(), Base64.DEFAULT);
         } catch (ServerComnmunicationError serverComnmunicationError) {
             serverComnmunicationError.printStackTrace();
         }
+
+        //Use bitmap object to show the images for every article
         Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
         image.setImageBitmap(decodedByte);
-
-
 
         TextView category = (TextView) listItem.findViewById(R.id.newsCategory);
         category.setText(article.getCategory());
@@ -73,20 +89,27 @@ public class NewsAdapter extends ArrayAdapter<Article>{
         TextView Abstract = (TextView) listItem.findViewById(R.id.newsAbstract);
         Abstract.setText(article.getAbstractText());
 
+        //onClick method
 
-//        frameLayout=(FrameLayout) listItem.findViewById(R.id.frameLayout);
-//        frameLayout.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//                Intent selectIntent= new Intent(getContext(),NewsArticle.class);
-//                selectIntent.putExtra("sample",article);
-//                getContext().startActivity(selectIntent);
-//
-//            }
-//        });
 
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Snackbar.make(v,"DeleteButton",Snackbar.LENGTH_SHORT);
+            }
+        });
+
+        modifyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Snackbar.make(v,"ModifyButton",Snackbar.LENGTH_SHORT);
+            }
+        });
         return listItem;
+    }
+
+    private boolean isLogged(){
+        return false;
     }
 
 

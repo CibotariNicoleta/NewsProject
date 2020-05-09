@@ -10,6 +10,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 public class Login extends AppCompatActivity {
 
     Button login;
@@ -36,11 +38,7 @@ public class Login extends AppCompatActivity {
                 }else{
                     Toast.makeText(getApplicationContext(), "Wrong"+
                             "Credentials",Toast.LENGTH_SHORT).show();
-
-
                     counter--;
-
-
                     if (counter == 0) {
                         login.setEnabled(false);
                     }
