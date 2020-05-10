@@ -1,32 +1,30 @@
 package com.example.newsmanagerproject.model;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.Adapter;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
+
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+
 
 import com.example.newsmanagerproject.LoadArticlesTask;
 import com.example.newsmanagerproject.Login;
 import com.example.newsmanagerproject.R;
-import com.example.newsmanagerproject.model.Article;
-import com.example.newsmanagerproject.model.Image;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -40,10 +38,39 @@ public class MainActivity extends AppCompatActivity {
     private NewsArticle newsArticle;
     private List<Article> listRes;
 
+    //Variables for sideBar
+    DrawerLayout drawerLayout;
+    NavigationView navigationView;
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //SideBar
+        setToolbar();
+        // DrawerLayOut
+        drawerLayout = findViewById(R.id.drawer_layout);
+        navigationView = findViewById(R.id.nav_controller_view_tag);
+        //navigationView.bringToFront();
+        //Toolbar
+        navigationView.setNavigationItemSelectedListener((item) -> {
+            switch (item.getItemId()) {
+                case R.id.nav_home:
+                    Intent intentHome = new Intent(this, MainActivity.class);
+                    startActivity(intentHome);
+                    break;
+                case R.id.nav_create:
+                    Intent intentAddArticle = new Intent(this, creatArticle.class);
+                    startActivity(intentAddArticle);
+                    break;
+                case R.id.nav_logout:
+                    break;
+            }
+            return false;
+        });
+
 
         recyclerView = (ListView) findViewById(R.id.list);
         loadArticlesTask = new LoadArticlesTask(this);
@@ -65,13 +92,13 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Snackbar.make(view,"Element clicked -> "+ position,Snackbar.LENGTH_LONG).show();
+                Snackbar.make(view, "Element clicked -> " + position, Snackbar.LENGTH_LONG).show();
                 Log.i("Click", "click en el elemento " + position + " de mi ListView");
-                goNewsArticle(view,position);
+                goNewsArticle(view, position);
             }
         });
 
-        loginButon= (FloatingActionButton) findViewById(R.id.loginButton);
+        loginButon = (FloatingActionButton) findViewById(R.id.loginButton);
         loginButon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -80,27 +107,48 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // Abrir menu
+                drawerLayout.openDrawer(GravityCompat.START);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
-    public void goLogin(View view){
+    public void goLogin(View view) {
 
-        Intent intent=new Intent(this, Login.class);
+        Intent intent = new Intent(this, Login.class);
         startActivity(intent);
 
     }
+
     //Method that permit acces to the NewArticle class
-    public void goNewsArticle(View view,int position){
-        Intent intentNewsArticle=new Intent(this,NewsArticle.class);
+    public void goNewsArticle(View view, int position) {
+        Intent intentNewsArticle = new Intent(this, NewsArticle.class);
 
         //Bundle bundle = new Bundle();
         //bundle.putSerializable("Article", listRes.get(position));
 
-        intentNewsArticle.putExtra("Article",listRes.get(position));
+        intentNewsArticle.putExtra("Article", listRes.get(position));
         startActivity(intentNewsArticle);
     }
 
 
-    public void getResult(List<Article> myList)
-    {
+    public void getResult(List<Article> myList) {
         myArticles = (ArrayList<Article>) myList;
+    }
+
+    //COMPLETAR
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private void setToolbar() {
+        Toolbar toolbar =(Toolbar)findViewById(R.id.toolbar2);
+//        setSupportActionBar(toolbar);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
     }
 }
