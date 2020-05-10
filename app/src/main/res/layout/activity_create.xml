@@ -5,103 +5,112 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <Spinner
+                android:id="@+id/spinner_categories"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:ems="10"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:hint="@string/create_category"
+                android:importantForAutofill="no"
+                android:inputType="text" />
+            <EditText
+                android:id="@+id/text_create_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="50dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:ems="10"
+                android:hint="@string/create_title"
+                android:importantForAutofill="no"
+                android:inputType="text" />
+
+            <EditText
+                android:id="@+id/text_create_abstract"
+                android:layout_width="362dp"
+                android:layout_height="48dp"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:hint="@string/create_abstract"
+                android:importantForAutofill="no"
+                android:inputType="text"
+                tools:ignore="MissingConstraints" />
+
+            <EditText
+                android:id="@+id/text_create_subtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:ems="10"
+                android:hint="@string/create_subtitle"
+                android:importantForAutofill="no"
+                android:inputType="text" />
+            <EditText
+                android:id="@+id/text_create_body"
+                android:layout_width="491dp"
+                android:layout_height="127dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:hint="@string/create_body"
+                android:importantForAutofill="no"
+                android:inputType="text" />
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="373dp"
+                android:layout_height="269dp"
+                android:layout_marginTop="10dp"
+                android:layout_gravity="center"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="50dp">
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/cancel_article_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginBottom="10dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    app:backgroundTint="#FFFFFF"
+                    app:srcCompat="@drawable/ic_cancelbutton"
+                    tools:ignore="MissingConstraints" />
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/save_article_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:layout_marginLeft="190dp"
+                    android:clickable="true"
+                    app:backgroundTint="#FFFFFF"
+                    app:srcCompat="@drawable/ic_savearticle"
+                    tools:ignore="MissingConstraints" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
 
 
-    <EditText
-        android:id="@+id/text_category"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Category"
-        android:inputType="text"
-        tools:layout_editor_absoluteX="85dp"
-        tools:layout_editor_absoluteY="33dp"
-        tools:ignore="MissingConstraints" />
-
-    <EditText
-        android:id="@+id/text_create_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="140dp"
-        android:hint="Create Title"
-        android:inputType="text"
-        android:ems="10"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
-        android:id="@+id/text_create_subtitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="244dp"
-        android:ems="10"
-        android:hint="Create subtitle"
-        android:inputType="text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="373dp"
-        android:layout_height="269dp"
-        android:layout_marginTop="104dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/text_category"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
-        android:id="@+id/text_create_abstract"
-        android:layout_width="362dp"
-        android:layout_height="48dp"
-        android:hint="Create Abstract"
-        android:inputType="text"
-        android:gravity="center"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.326"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="325dp"
-        tools:ignore="MissingConstraints" />
-
-    <EditText
-        android:id="@+id/text_body"
-        android:layout_width="491dp"
-        android:layout_height="127dp"
-        android:layout_marginBottom="216dp"
-        android:hint="Create Body"
-        android:inputType="text"
-        android:gravity="center"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/floatingActionButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        app:backgroundTint="#FFFFFF"
-        app:srcCompat="@drawable/ic_cancelbutton"
-        tools:layout_editor_absoluteX="98dp"
-        tools:layout_editor_absoluteY="565dp"
-        tools:ignore="MissingConstraints" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/floatingActionButton2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        app:backgroundTint="#FFFFFF"
-        app:srcCompat="@drawable/ic_savearticle"
-        tools:layout_editor_absoluteX="256dp"
-        tools:layout_editor_absoluteY="565dp"
-        tools:ignore="MissingConstraints" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
