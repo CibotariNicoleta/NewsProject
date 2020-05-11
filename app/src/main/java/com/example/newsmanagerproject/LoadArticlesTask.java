@@ -59,7 +59,7 @@ public class LoadArticlesTask  extends AsyncTask<Void, Void, List<Article>> {
             try {
                 // obtain 6 articles from offset 0
                 Log.d("El usuario es ->",ModelManager.getIdUser() );
-                Log.d("Con la clave de API->" ,ModelManager.getLoggedApiKey() );
+                Log.d("Con la clave de API->",ModelManager.getLoggedApiKey() );
                 //System.out.println("El usuario es ->"+ ModelManager.getIdUser() +"Con la clave de API->" +ModelManager.getLoggedApiKey());//BORRAR
                 res = ModelManager.getArticles(6, 0);
                 for (Article article : res) {

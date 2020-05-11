@@ -1,7 +1,12 @@
 package com.example.newsmanagerproject.model;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -11,6 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,19 +27,20 @@ import com.google.android.material.snackbar.Snackbar;
 
 public class creatArticle extends AppCompatActivity  {
     private Spinner spinner;
-    private FloatingActionButton saveButton;
-    private EditText text_title;
-    private EditText text_abstract;
-    private EditText text_subtitle;
-    private EditText text_body;
+    private FloatingActionButton saveButton,cancelButton;
+    private EditText text_title,text_abstract,text_subtitle,text_body;
     private String categoryST;
-
+    private Article articleCreated;
+    private Dialog myDialog;
     private String titleST,abstractST,subtitleST,bodyST;
+    private TextView category_text, title_text, abstract_text, subtitle_text, body_text;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create);
 
+        //For PopUp
+        myDialog= new Dialog(this);
         //Code to get the data of the spinner
         spinner =findViewById(R.id.spinner_categories);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -55,7 +62,6 @@ public class creatArticle extends AppCompatActivity  {
         spinner.setAdapter(adapter);
 
         //Get all data
-
         text_title=findViewById(R.id.text_create_title);
         titleST=text_title.getText().toString();
         text_title.addTextChangedListener(new TextWatcher() {
@@ -74,7 +80,6 @@ public class creatArticle extends AppCompatActivity  {
                 titleST=s.toString();
             }
         });
-
 
         text_abstract=findViewById(R.id.text_create_abstract);
         abstractST=text_abstract.getText().toString();
@@ -95,7 +100,6 @@ public class creatArticle extends AppCompatActivity  {
             }
         });
 
-
         text_subtitle=findViewById(R.id.text_create_subtitle);
         subtitleST=text_subtitle.getText().toString();
         text_subtitle.addTextChangedListener(new TextWatcher() {
@@ -114,7 +118,6 @@ public class creatArticle extends AppCompatActivity  {
                 subtitleST=s.toString();
             }
         });
-
 
         text_body=findViewById(R.id.text_create_body);
         bodyST=text_body.getText().toString();
@@ -135,6 +138,7 @@ public class creatArticle extends AppCompatActivity  {
             }
         });
 
+        //Buttons Action
         saveButton = findViewById(R.id.save_article_button);
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -142,9 +146,35 @@ public class creatArticle extends AppCompatActivity  {
                 goSave(v);
             }
         });
+
+        cancelButton=findViewById(R.id.cancel_article_button);
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Snackbar.make(v,"Cancelling Creating Article Operation",Snackbar.LENGTH_LONG).show();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Intent i=new Intent(getApplicationContext(),MainActivity.class);
+                        startActivity(i);
+                    }
+                }, 1000);
+            }
+        });
     }
     private void goSave(View v){
-        isValidated();
+        String user="12";
+        if(isValidated()){
+            articleCreated=new Article(categoryST,titleST,abstractST,bodyST,subtitleST,user);
+            ShowPopUp(v);
+//            Intent intentShow= new Intent(getApplicationContext(),PopActivity.class);
+//            //To send Article to PopUp Class
+//            intentShow.putExtra("ArticleCreated", articleCreated);
+//            startActivity(intentShow);
+        }
+        else{
+            Snackbar.make(v,"Please, complete all the fields",Snackbar.LENGTH_LONG).show();
+        }
     }
 
     private boolean isValidated(){
@@ -155,6 +185,41 @@ public class creatArticle extends AppCompatActivity  {
         }
         Log.i("TaG", "EMPTY");
         return false;
+    }
+
+    public void ShowPopUp(View v){
+
+        myDialog.setContentView(R.layout.activity_popup);
+        FloatingActionButton buttonPopUpArticle= myDialog.findViewById(R.id.checkButton);
+        category_text = myDialog.findViewById(R.id.category_created);
+        category_text.setText(articleCreated.getCategory());
+
+        title_text = myDialog.findViewById(R.id.title_created);
+        title_text.setText(articleCreated.getTitleText());
+
+        abstract_text = myDialog.findViewById(R.id.abstract_created);
+        abstract_text.setText(articleCreated.getAbstractText());
+
+        subtitle_text = myDialog.findViewById(R.id.subtitle_created);
+        subtitle_text.setText(articleCreated.getSubtitleText());
+
+        body_text = myDialog.findViewById(R.id.body_created);
+        body_text.setText(articleCreated.getBodyText());
+
+        myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        myDialog.show();
+
+        buttonPopUpArticle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //We have to send create Request To API
+
+                //And go to Main Activity
+                Intent intentMainAct= new Intent(getApplicationContext(),MainActivity.class);
+//            //To send Article to PopUp Class
+                startActivity(intentMainAct);
+            }
+        });
     }
 
 

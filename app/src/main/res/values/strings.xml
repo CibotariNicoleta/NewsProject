@@ -27,5 +27,13 @@
     <string name="create_subtitle">Create subtitle</string>
     <string name="create_abstract">Create Abstract</string>
     <string name="create_body">Create Body</string>
+    <string name="subtitle_created">Subtitle</string>
+    <string name="title_created">Title</string>
+    <string name="abstract_created">Abstract</string>
+    <string name="body_created">Body</string>
+    <string name="article_data_created">Article Data</string>
+    <string name="category_created">Category</string>
+    <string name="user_name">User Name</string>
+    <string name="password">Password</string>
 
 </resources>

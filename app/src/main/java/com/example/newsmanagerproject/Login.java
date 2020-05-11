@@ -14,7 +14,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class Login extends AppCompatActivity {
 
-    Button login;
+    FloatingActionButton login;
     EditText userName, pwd;
     int counter =3;
 
@@ -24,15 +24,15 @@ public class Login extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        login=(Button) findViewById(R.id.login_button);
+        login= findViewById(R.id.loginButton);
         userName=(EditText)findViewById(R.id.userName);
         pwd=(EditText)findViewById(R.id.pwd);
 
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(userName.getText().toString().equals("admin") &&
-                        pwd.getText().toString().equals("1234")) {
+                if(userName.getText().toString().equals("DEV_TEAM_09") &&
+                        pwd.getText().toString().equals("65424")) {
                     Toast.makeText(getApplicationContext(),
                             "Conecting...",Toast.LENGTH_SHORT).show();
                 }else{

@@ -102,7 +102,9 @@ public class MainActivity extends AppCompatActivity {
         loginButon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goLogin(v);
+                //goLogin(v);
+                Intent intent = new Intent(getApplicationContext(), Login.class);
+                startActivity(intent);
             }
         });
     }
@@ -118,20 +120,19 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void goLogin(View view) {
+    //Action to Loggin in the App
+//    public void goLogin(View view) {
+//
+//        Intent intent = new Intent(this, Login.class);
+//        startActivity(intent);
+//
+//    }
 
-        Intent intent = new Intent(this, Login.class);
-        startActivity(intent);
-
-    }
-
-    //Method that permit acces to the NewArticle class
+    //Method that permit access to the NewArticle class
     public void goNewsArticle(View view, int position) {
         Intent intentNewsArticle = new Intent(this, NewsArticle.class);
 
-        //Bundle bundle = new Bundle();
-        //bundle.putSerializable("Article", listRes.get(position));
-
+        //To send article to NewsArticle
         intentNewsArticle.putExtra("Article", listRes.get(position));
         startActivity(intentNewsArticle);
     }
