@@ -1,16 +1,19 @@
 package com.example.newsmanagerproject.model;
 
+import android.content.ClipData;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
@@ -31,17 +34,18 @@ import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ArrayList<Article> myArticles = new ArrayList<>();
     private ListView recyclerView;
     private NewsAdapter myAdapter;
     private LoadArticlesTask loadArticlesTask;
     private FloatingActionButton loginButon;
-    private NewsArticle newsArticle;
     private List<Article> listRes;
+
 
     //Variables for sideBar
     DrawerLayout drawerLayout;
     NavigationView navigationView;
+
+    public static boolean isLogged=false;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -50,11 +54,22 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         //SideBar
-        setToolbar();
+        Toolbar toolbar=findViewById(R.id.toolbarPerfect);
+        setSupportActionBar(toolbar);
+
         // DrawerLayOut
         drawerLayout = findViewById(R.id.drawer_layout);
+
+        ActionBarDrawerToggle toggle= new ActionBarDrawerToggle(this,drawerLayout,toolbar,R.string.navigation_drawer_open,R.string.navigation_drawer_close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
         navigationView = findViewById(R.id.nav_controller_view_tag);
-        navigationView.bringToFront();
+
+
+
+        if(!isLogged){
+            Log.i("Tag","No está logueado");
+        }
 
         //Displays the menu actions
         navigationView.setNavigationItemSelectedListener((item) -> {
@@ -75,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // This part will show a list of articles
-        recyclerView = (ListView) findViewById(R.id.list);
+        recyclerView =  findViewById(R.id.list);
 
         //Call the function to get the Article from server
         loadArticlesTask = new LoadArticlesTask(this);
@@ -111,7 +126,6 @@ public class MainActivity extends AppCompatActivity {
         loginButon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //goLogin(v);
                 Intent intent = new Intent(getApplicationContext(), Login.class);
                 startActivity(intent);
             }
@@ -139,19 +153,13 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intentNewsArticle);
     }
 
-
-    public void getResult(List<Article> myList) {
-        myArticles = (ArrayList<Article>) myList;
-    }
-
-    //COMPLETAR
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    private void setToolbar() {
-        Toolbar toolbar = findViewById(R.id.toolbar2);
-        //setSupportActionBar(toolbar);   //TROUBLE
-        Objects.requireNonNull(getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_menu);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-
+    @Override
+    public void onBackPressed(){
+        if(drawerLayout.isDrawerOpen(GravityCompat.START)){
+            drawerLayout.closeDrawer(GravityCompat.START);
+        }
+        else{
+            super.onBackPressed();
+        }
     }
 }

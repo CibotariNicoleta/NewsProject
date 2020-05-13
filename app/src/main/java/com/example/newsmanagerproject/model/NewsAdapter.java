@@ -31,6 +31,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.newsmanagerproject.model.MainActivity.isLogged;
+
 public class NewsAdapter extends ArrayAdapter<Article>{
 
 
@@ -54,13 +56,15 @@ public class NewsAdapter extends ArrayAdapter<Article>{
         if(listItem == null)
             listItem = LayoutInflater.from(mContext).inflate(R.layout.list_item, parent,false);
 
-        deleteButton=(FloatingActionButton) listItem.findViewById(R.id.deleteButton);
-        modifyButton=(FloatingActionButton) listItem.findViewById(R.id.modifyButton);
 
-        if(!isLogged()){
-            deleteButton.setVisibility(View.GONE);
-            modifyButton.setVisibility(View.GONE);
-        }
+
+        deleteButton= listItem.findViewById(R.id.deleteButton);
+        modifyButton= listItem.findViewById(R.id.modifyButton);
+
+//        if(!isLogged()){
+ //           deleteButton.setVisibility(View.GONE);
+ //           modifyButton.setVisibility(View.GONE);
+//        }
 
         final Article article = articles.get(position);
 
@@ -109,7 +113,7 @@ public class NewsAdapter extends ArrayAdapter<Article>{
     }
 
     private boolean isLogged(){
-        return false;
+        return isLogged;
     }
 
 
