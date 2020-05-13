@@ -94,7 +94,8 @@
                     android:focusable="true"
                     app:backgroundTint="#FFFFFF"
                     app:srcCompat="@drawable/ic_cancelbutton"
-                    tools:ignore="MissingConstraints" />
+                    tools:ignore="MissingConstraints"
+                    android:layout_marginStart="40dp" />
 
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/save_article_button"
@@ -105,7 +106,9 @@
                     android:clickable="true"
                     app:backgroundTint="#FFFFFF"
                     app:srcCompat="@drawable/ic_savearticle"
-                    tools:ignore="MissingConstraints" />
+                    tools:ignore="MissingConstraints"
+                    android:layout_marginStart="190dp"
+                    android:focusable="true" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
