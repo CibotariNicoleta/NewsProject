@@ -9,8 +9,7 @@ import java.util.Date;
 import java.util.Hashtable;
 
 import org.json.simple.JSONObject;
-import com.example.newsmanagerproject.model.Logger;
-import com.example.newsmanagerproject.model.SerializationUtils;
+
 import com.example.newsmanagerproject.network.errors.ServerComnmunicationError;
 
 
@@ -26,11 +25,55 @@ public class Article extends ModelEntity implements Serializable {
     private String imageDescription;
     private String thumbnail;
     private Date lastUpdate;
-
+    private String imageData;
     @RequiresApi(api = Build.VERSION_CODES.N)
     private String parseStringFromJson(JSONObject jsonArticle, String key, String def){
         Object in = jsonArticle.getOrDefault(key,def);
         return (in==null?def:in).toString();
+    }
+
+    public String getSubtitle() {
+        return subtitle;
+    }
+
+    public void setSubtitle(String subtitle) {
+        this.subtitle = subtitle;
+    }
+
+    public void setIdUser(int idUser) {
+        this.idUser = idUser;
+    }
+
+    public Image getMainImage() {
+        return mainImage;
+    }
+
+    public void setMainImage(Image mainImage) {
+        this.mainImage = mainImage;
+    }
+
+    public String getImageDescription() {
+        return imageDescription;
+    }
+
+    public String getImageData() {
+        return imageData;
+    }
+
+    public void setImageData(String imageData) {
+        this.imageData = imageData;
+    }
+
+    public void setImageDescription(String imageDescription) {
+        this.imageDescription = imageDescription;
+    }
+
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
+    }
+
+    public void setLastUpdate(Date lastUpdate) {
+        this.lastUpdate = lastUpdate;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -69,6 +112,20 @@ public class Article extends ModelEntity implements Serializable {
         bodyText = body;
         this.subtitle = subtitle;
 
+    }
+
+    public Article(){
+        if (imageData!=null && !imageData.isEmpty())
+            mainImage = new Image(1, imageDescription, id, imageData);
+
+    }
+
+    public String getThumbnail() {
+        return thumbnail;
+    }
+
+    public Date getLastUpdate() {
+        return lastUpdate;
     }
 
     public void setId(int id){

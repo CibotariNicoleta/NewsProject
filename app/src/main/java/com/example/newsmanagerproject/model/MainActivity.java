@@ -1,15 +1,12 @@
 package com.example.newsmanagerproject.model;
 
-import android.content.ClipData;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
 
 import androidx.annotation.RequiresApi;
@@ -23,13 +20,11 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.example.newsmanagerproject.LoadArticlesTask;
 import com.example.newsmanagerproject.Login;
 import com.example.newsmanagerproject.R;
+import com.example.newsmanagerproject.database.ArticleDB;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
@@ -40,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
     private FloatingActionButton loginButon;
     private List<Article> listRes;
 
-
+    private ArticleDB dbArticle;
     //Variables for sideBar
     DrawerLayout drawerLayout;
     NavigationView navigationView;
@@ -52,7 +47,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        //db conection
+        dbArticle= new ArticleDB(this);
         //SideBar
         Toolbar toolbar=findViewById(R.id.toolbarPerfect);
         setSupportActionBar(toolbar);
@@ -96,19 +92,22 @@ public class MainActivity extends AppCompatActivity {
         loadArticlesTask = new LoadArticlesTask(this);
         listRes = null;
         try {
-            listRes = loadArticlesTask.execute().get();
+            addInDb( loadArticlesTask.execute().get());
+
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+      //add in db
 
         //Create adapater to display data in the user screen
+        listRes = ArticleDB.loadAllMessages();
         myAdapter = new NewsAdapter(this, listRes);
         recyclerView.setAdapter(myAdapter);
 
         // This let us set every item clickable
-        recyclerView.setClickable(true);
+     /*   recyclerView.setClickable(true);
         recyclerView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             //When we clicked any  item of the list view. This action will ocurre
@@ -119,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
 //                Log.i("Click", "click en el elemento " + position + " de mi ListView");
                 goNewsArticle(view, position);
             }
-        });
+        }); */
 
         //BUTTONS Action
         loginButon = (FloatingActionButton) findViewById(R.id.loginButton);
@@ -130,6 +129,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
     }
 
     //This method allow manage the actions whenever any menu item is selected
@@ -162,4 +162,11 @@ public class MainActivity extends AppCompatActivity {
             super.onBackPressed();
         }
     }
+
+    public void addInDb(List<Article> art)
+    {
+        for(Article r:art)
+            ArticleDB.saveNewMessage(r);
+    }
+
 }

@@ -21,6 +21,7 @@ import android.widget.TextView;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 
 import com.example.newsmanagerproject.R;
 import com.example.newsmanagerproject.network.errors.ServerComnmunicationError;
@@ -36,6 +37,7 @@ import static com.example.newsmanagerproject.model.MainActivity.isLogged;
 public class NewsAdapter extends ArrayAdapter<Article>{
 
 
+    private CardView myCard;
     private Context mContext;
     private List<Article> articles = new ArrayList<>();
     private FrameLayout frameLayout;
@@ -56,15 +58,18 @@ public class NewsAdapter extends ArrayAdapter<Article>{
         if(listItem == null)
             listItem = LayoutInflater.from(mContext).inflate(R.layout.list_item, parent,false);
 
+        myCard = listItem.findViewById(R.id.myCard);
+
+
 
 
         deleteButton= listItem.findViewById(R.id.deleteButton);
         modifyButton= listItem.findViewById(R.id.modifyButton);
-
-//        if(!isLogged()){
- //           deleteButton.setVisibility(View.GONE);
- //           modifyButton.setVisibility(View.GONE);
-//        }
+//!isLogged()
+     //  if(true){
+            //deleteButton.setVisibility(View.GONE);
+            //modifyButton.setVisibility(View.GONE);
+     //   }
 
         final Article article = articles.get(position);
 
@@ -96,7 +101,7 @@ public class NewsAdapter extends ArrayAdapter<Article>{
         //onClick method
 
 
-        deleteButton.setOnClickListener(new View.OnClickListener() {
+     deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Snackbar.make(v,"DeleteButton",Snackbar.LENGTH_SHORT);
@@ -107,6 +112,15 @@ public class NewsAdapter extends ArrayAdapter<Article>{
             @Override
             public void onClick(View v) {
                 Snackbar.make(v,"ModifyButton",Snackbar.LENGTH_SHORT);
+            }
+        });
+
+        myCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intentNewsArticle = new Intent(myCard.getContext(), NewsArticle.class);
+                intentNewsArticle.putExtra("Article",  article);
+                mContext.startActivity(intentNewsArticle);
             }
         });
         return listItem;
