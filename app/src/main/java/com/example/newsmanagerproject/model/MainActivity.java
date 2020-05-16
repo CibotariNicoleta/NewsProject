@@ -12,12 +12,14 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
 
 
 import com.example.newsmanagerproject.LoadArticlesTask;
@@ -32,20 +34,18 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private ListView recyclerView;
     private NewsAdapter myAdapter;
     private LoadArticlesTask loadArticlesTask;
     private FloatingActionButton loginButon;
     private List<Article> listRes;
-
-
     //Variables for sideBar
     DrawerLayout drawerLayout;
     NavigationView navigationView;
 
-    public static boolean isLogged=false;
+    public static boolean isLogged = false;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -54,45 +54,36 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         //SideBar
-        Toolbar toolbar=findViewById(R.id.toolbarPerfect);
+        Toolbar toolbar = findViewById(R.id.toolbarPerfect);
         setSupportActionBar(toolbar);
-
-        // DrawerLayOut
+        Log.i("Toolbar","Creado el toolbar exitosamente");
+        // DrawerLayOut get the xml object
         drawerLayout = findViewById(R.id.drawer_layout);
 
-        ActionBarDrawerToggle toggle= new ActionBarDrawerToggle(this,drawerLayout,toolbar,R.string.navigation_drawer_open,R.string.navigation_drawer_close);
+        //To set the menu in the sidebar
+        navigationView = findViewById(R.id.nav_controller_view_tag);
+        navigationView.setNavigationItemSelectedListener(this);
+        Log.i("Navigation","Creado el navigationView");
+
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
-        navigationView = findViewById(R.id.nav_controller_view_tag);
 
-
-
-        if(!isLogged){
-            Log.i("Tag","No está logueado");
+        Log.i("Checking","Antes de entrar en el primer fragment");
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment, new AllFragment()).commit();
+            navigationView.setCheckedItem(R.id.category_all);
         }
 
-        //Displays the menu actions
-        navigationView.setNavigationItemSelectedListener((item) -> {
-            switch (item.getItemId()) {
-                case R.id.nav_home:
-                    Intent intentHome = new Intent(this, MainActivity.class);
-                    startActivity(intentHome);
-                    break;
-                case R.id.nav_create:
-                    Intent intentAddArticle = new Intent(this, creatArticle.class);
-                    startActivity(intentAddArticle);
-                    break;
-                case R.id.nav_logout:
-                    /// WE HAVE TO IMPLEMENT LOGOUT FUNCTION
-                    break;
-            }
-            return false;
-        });
+        if (!isLogged) {
+            Log.i("Tag", "No está logueado");
+        }
 
         // This part will show a list of articles
-        recyclerView =  findViewById(R.id.list);
+        //recyclerView = findViewById(R.id.list);  DESCOMENTAR LUEGO
 
         //Call the function to get the Article from server
+
         loadArticlesTask = new LoadArticlesTask(this);
         listRes = null;
         try {
@@ -107,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
         myAdapter = new NewsAdapter(this, listRes);
         recyclerView.setAdapter(myAdapter);
 
-        // This let us set every item clickable
+        // This let us set every item clickable LUEGO DESCOMENTARTodo
         recyclerView.setClickable(true);
         recyclerView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -123,43 +114,97 @@ public class MainActivity extends AppCompatActivity {
 
         //BUTTONS Action
         loginButon = (FloatingActionButton) findViewById(R.id.loginButton);
+        Log.i("LoginButton","Antes del loginButton");
         loginButon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.i("LoginButton","Antes de llamar al login");
                 Intent intent = new Intent(getApplicationContext(), Login.class);
                 startActivity(intent);
             }
         });
+        Log.i("LoginButton","DESPUES del loginButton");
+    }
+
+
+
+    @Override
+    public void onBackPressed() {
+        Log.i("onBackPressed","Antes");
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+        Log.i("onBackPressed","Después");
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        Log.i("onNaviSelec","Antes");
+        Fragment f= null;
+        switch (item.getItemId()) {
+            case R.id.nav_home:
+                Intent intentHome = new Intent(this, MainActivity.class);
+                startActivity(intentHome);
+                break;
+            case R.id.nav_create:
+                Intent intentAddArticle = new Intent(this, creatArticle.class);
+                startActivity(intentAddArticle);
+                break;
+            case R.id.category_national:
+//                getSupportFragmentManager().beginTransaction().replace(R.id., new NationalFragment()).commit();
+                f=new NationalFragment();
+                break;
+            case R.id.category_economy:
+//                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_view_tag, new EconomyFragment()).commit();
+                f=new EconomyFragment();
+                break;
+            case R.id.category_sports:
+//                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_view_tag, new SportsFragment()).commit();
+                f=new SportsFragment();
+                break;
+            case R.id.category_technology:
+//                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_view_tag, new TechnologyFragment()).commit();
+                f=new TechnologyFragment();
+                break;
+            case R.id.category_all:
+//                getSupportFragmentManager().beginTransaction().replace(R.id.list, new AllFragment()).commit();
+                f=new AllFragment();
+                break;
+            case R.id.nav_logout:
+                /// WE HAVE TO IMPLEMENT LOGOUT FUNCTION
+                break;
+        }
+        if(f!=null){
+            getSupportFragmentManager().beginTransaction().replace(R.id.list,f).commit();
+            item.setChecked(true);
+            drawerLayout.closeDrawer(GravityCompat.START);
+        }
+        Log.i("onNaviSelec","Despues");
+        //To select item when is triggered
+        return false;
     }
 
     //This method allow manage the actions whenever any menu item is selected
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Log.i("onOptionsItemSelected","Antes");
         switch (item.getItemId()) {
             case android.R.id.home:
                 // Abrir menu
                 drawerLayout.openDrawer(GravityCompat.START);
-                return false;
+                return true;
         }
+        Log.i("onOptionsItemSelected","Después");
         return super.onOptionsItemSelected(item);
     }
 
     //Method that permit access to the NewArticle class
     public void goNewsArticle(View view, int position) {
         Intent intentNewsArticle = new Intent(this, NewsArticle.class);
-
         //To send article to NewsArticle
         intentNewsArticle.putExtra("Article", listRes.get(position));
         startActivity(intentNewsArticle);
-    }
-
-    @Override
-    public void onBackPressed(){
-        if(drawerLayout.isDrawerOpen(GravityCompat.START)){
-            drawerLayout.closeDrawer(GravityCompat.START);
-        }
-        else{
-            super.onBackPressed();
-        }
     }
 }

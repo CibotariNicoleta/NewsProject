@@ -35,4 +35,14 @@
     <string name="password">Password</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="national_category">National</string>
+    <string name="economy_category">Economy</string>
+    <string name="sports_category">Sports</string>
+    <string name="technology_category">Technology</string>
+    <string name="all_category">All</string>
+    <string name="categories_category">Categories</string>
+    <string name="home_nav">Home</string>
+    <string name="create_nav">Create</string>
+    <string name="logout_nav">Logout</string>
+    <string name="logout_menu">LogOut</string>
 </resources>
