@@ -27,7 +27,7 @@ public class ArticleDB {
     public static void saveNewMessage(Article m){
         SQLiteDatabase db = helper.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_ID, m.getId());
+       // values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_ID, m.getId());
         values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_IDUSER,m.getIdUser());
         values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_TITLE,m.getTitleText());
         values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_CATEGORY,m.getCategory());
@@ -76,17 +76,21 @@ public class ArticleDB {
             String subtitle = cursor.getString(6);
             String ImageDescription = cursor.getString(7);
             String thumbnail = cursor.getString(8);
-            String lasupdate = cursor.getString(9);
+            Double lasupdate = cursor.getDouble(9);
             String imageData = cursor.getString(10);
 
-            try {
+
+            long myLong = System.currentTimeMillis() + ((long) (lasupdate * 1000));
+            Date itemDate = new Date(myLong);
+            article.setLastUpdate(itemDate);
+       /*     try {
 
               Date date = formatter.parse(lasupdate);
               article.setLastUpdate(date);
 
             } catch (ParseException e) {
                 e.printStackTrace();
-            }
+            }*/
 
             article.setId(id);
             article.setIdUser(idUser);

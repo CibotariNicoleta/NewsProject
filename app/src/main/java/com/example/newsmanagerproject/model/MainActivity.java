@@ -79,14 +79,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         // This part will show a list of articles
-        //recyclerView = findViewById(R.id.list);  DESCOMENTAR LUEGO
+        recyclerView = findViewById(R.id.list);
 
         //Call the function to get the Article from server
 
         loadArticlesTask = new LoadArticlesTask(this);
         listRes = null;
+
         try {
-            listRes = loadArticlesTask.execute().get();
+            addInDb(loadArticlesTask.execute().get());
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -95,9 +96,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
       //add in db
 
         //Create adapater to display data in the user screen
-//        listRes = ArticleDB.loadAllMessages();
-//        myAdapter = new NewsAdapter(this, listRes);
-//        recyclerView.setAdapter(myAdapter);
+        listRes = ArticleDB.loadAllMessages();
+      //  myAdapter = new NewsAdapter(this, listRes);
+      //  recyclerView.setAdapter(myAdapter);
 
         // This let us set every item clickable LUEGO DESCOMENTARTodo
 //        recyclerView.setClickable(true);
