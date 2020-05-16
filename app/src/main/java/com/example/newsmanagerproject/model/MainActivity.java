@@ -1,15 +1,12 @@
 package com.example.newsmanagerproject.model;
 
-import android.content.ClipData;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
@@ -25,13 +22,11 @@ import androidx.fragment.app.Fragment;
 import com.example.newsmanagerproject.LoadArticlesTask;
 import com.example.newsmanagerproject.Login;
 import com.example.newsmanagerproject.R;
+import com.example.newsmanagerproject.database.ArticleDB;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -41,6 +36,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private LoadArticlesTask loadArticlesTask;
     private FloatingActionButton loginButon;
     private List<Article> listRes;
+
+    private ArticleDB dbArticle;
     //Variables for sideBar
     DrawerLayout drawerLayout;
     NavigationView navigationView;
@@ -52,7 +49,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        //db conection
+        dbArticle= new ArticleDB(this);
         //SideBar
         Toolbar toolbar = findViewById(R.id.toolbarPerfect);
         setSupportActionBar(toolbar);
@@ -68,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
+        navigationView = findViewById(R.id.nav_controller_view_tag);
 
         Log.i("Checking","Antes de entrar en el primer fragment");
         if (savedInstanceState == null) {
@@ -93,13 +92,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+      //add in db
 
         //Create adapater to display data in the user screen
+        listRes = ArticleDB.loadAllMessages();
         myAdapter = new NewsAdapter(this, listRes);
         recyclerView.setAdapter(myAdapter);
 
         // This let us set every item clickable LUEGO DESCOMENTARTodo
         recyclerView.setClickable(true);
+        // This let us set every item clickable
+     /*   recyclerView.setClickable(true);
         recyclerView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             //When we clicked any  item of the list view. This action will ocurre
@@ -110,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //                Log.i("Click", "click en el elemento " + position + " de mi ListView");
                 goNewsArticle(view, position);
             }
-        });
+        }); */
 
         //BUTTONS Action
         loginButon = (FloatingActionButton) findViewById(R.id.loginButton);
@@ -126,18 +129,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Log.i("LoginButton","DESPUES del loginButton");
     }
 
-
-
-    @Override
-    public void onBackPressed() {
-        Log.i("onBackPressed","Antes");
-        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            drawerLayout.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-        Log.i("onBackPressed","Después");
-    }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -184,6 +175,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Log.i("onNaviSelec","Despues");
         //To select item when is triggered
         return false;
+
     }
 
     //This method allow manage the actions whenever any menu item is selected
@@ -203,8 +195,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     //Method that permit access to the NewArticle class
     public void goNewsArticle(View view, int position) {
         Intent intentNewsArticle = new Intent(this, NewsArticle.class);
+
         //To send article to NewsArticle
         intentNewsArticle.putExtra("Article", listRes.get(position));
         startActivity(intentNewsArticle);
     }
+
+    @Override
+    public void onBackPressed() {
+        Log.i("onBackPressed","Antes");
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+        Log.i("onBackPressed","Después");
+    }
+
+    public void addInDb(List<Article> art)
+    {
+        for(Article r:art)
+            ArticleDB.saveNewMessage(r);
+    }
+
 }
