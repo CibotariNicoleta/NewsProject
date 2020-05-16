@@ -95,12 +95,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
       //add in db
 
         //Create adapater to display data in the user screen
-        listRes = ArticleDB.loadAllMessages();
-        myAdapter = new NewsAdapter(this, listRes);
-        recyclerView.setAdapter(myAdapter);
+//        listRes = ArticleDB.loadAllMessages();
+//        myAdapter = new NewsAdapter(this, listRes);
+//        recyclerView.setAdapter(myAdapter);
 
         // This let us set every item clickable LUEGO DESCOMENTARTodo
-        recyclerView.setClickable(true);
+//        recyclerView.setClickable(true);
         // This let us set every item clickable
      /*   recyclerView.setClickable(true);
         recyclerView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
