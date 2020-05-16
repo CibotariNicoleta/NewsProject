@@ -5,22 +5,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
-    <com.google.android.material.appbar.MaterialToolbar
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/design_default_color_primary"
-        android:id="@+id/toolbarPerfect"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/sports_category"
-            android:textSize="30sp"
-            android:layout_gravity="center"/>
-    </com.google.android.material.appbar.MaterialToolbar>
-
     <ListView
         android:id="@+id/list"
         android:layout_width="match_parent"

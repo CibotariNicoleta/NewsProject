@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
@@ -26,6 +27,7 @@ import com.example.newsmanagerproject.database.ArticleDB;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -35,7 +37,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private NewsAdapter myAdapter;
     private LoadArticlesTask loadArticlesTask;
     private FloatingActionButton loginButon;
-    private List<Article> listRes;
+    private List<Article> listRes=null;
 
     private ArticleDB dbArticle;
     //Variables for sideBar
@@ -51,24 +53,43 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main);
         //db conection
         dbArticle= new ArticleDB(this);
+
         //SideBar
         Toolbar toolbar = findViewById(R.id.toolbarPerfect);
         setSupportActionBar(toolbar);
-        Log.i("Toolbar","Creado el toolbar exitosamente");
+
         // DrawerLayOut get the xml object
         drawerLayout = findViewById(R.id.drawer_layout);
 
         //To set the menu in the sidebar
         navigationView = findViewById(R.id.nav_controller_view_tag);
         navigationView.setNavigationItemSelectedListener(this);
-        Log.i("Navigation","Creado el navigationView");
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
-        navigationView = findViewById(R.id.nav_controller_view_tag);
 
-        Log.i("Checking","Antes de entrar en el primer fragment");
+        //Call the function to get the Article from server
+        loadArticlesTask = new LoadArticlesTask(this);
+        try {
+            //add in db
+            addInDb(loadArticlesTask.execute().get());
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+
+        //Create adapater to display data in the user screen
+        listRes = ArticleDB.loadAllMessages();
+
+        //Get articles from DB
+        //Convert list in serialize object
+        ArrayList<Article> listSerialize = new ArrayList<>(listRes);
+        //Send information to AllFragment
+        getIntent().putExtra("listArticle",listSerialize);
+
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment, new AllFragment()).commit();
             navigationView.setCheckedItem(R.id.category_all);
@@ -81,39 +102,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // This part will show a list of articles
         //recyclerView = findViewById(R.id.list);  DESCOMENTAR LUEGO
 
-        //Call the function to get the Article from server
 
-        loadArticlesTask = new LoadArticlesTask(this);
-        listRes = null;
-        try {
-            listRes = loadArticlesTask.execute().get();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-      //add in db
 
-        //Create adapater to display data in the user screen
-//        listRes = ArticleDB.loadAllMessages();
+
+
 //        myAdapter = new NewsAdapter(this, listRes);
 //        recyclerView.setAdapter(myAdapter);
 
         // This let us set every item clickable LUEGO DESCOMENTARTodo
 //        recyclerView.setClickable(true);
-        // This let us set every item clickable
-     /*   recyclerView.setClickable(true);
-        recyclerView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            //When we clicked any  item of the list view. This action will ocurre
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-//                Snackbar.make(view, "Element clicked -> " + position, Snackbar.LENGTH_LONG).show();
-//                Log.i("Click", "click en el elemento " + position + " de mi ListView");
-                goNewsArticle(view, position);
-            }
-        }); */
+//
+//        recyclerView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//
+//            //When we clicked any  item of the list view. This action will ocurre
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//
+////                Snackbar.make(view, "Element clicked -> " + position, Snackbar.LENGTH_LONG).show();
+////                Log.i("Click", "click en el elemento " + position + " de mi ListView");
+//                goNewsArticle(view, position);
+//            }
+//        });
 
         //BUTTONS Action
         loginButon = (FloatingActionButton) findViewById(R.id.loginButton);
@@ -168,14 +177,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
         }
         if(f!=null){
-            getSupportFragmentManager().beginTransaction().replace(R.id.list,f).commit();
-            item.setChecked(true);
-            drawerLayout.closeDrawer(GravityCompat.START);
+            //Send data from database
+
+
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment,f).commit();
+//            item.setChecked(true);
+            getSupportActionBar().setTitle(item.getTitle());
+            drawerLayout.closeDrawers();
         }
-        Log.i("onNaviSelec","Despues");
         //To select item when is triggered
         return false;
-
     }
 
     //This method allow manage the actions whenever any menu item is selected
@@ -201,16 +212,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         startActivity(intentNewsArticle);
     }
 
-    @Override
-    public void onBackPressed() {
-        Log.i("onBackPressed","Antes");
-        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            drawerLayout.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-        Log.i("onBackPressed","Después");
-    }
+//    @Override
+//    public void onBackPressed() {
+//        Log.i("onBackPressed","Antes");
+//        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+//            drawerLayout.closeDrawer(GravityCompat.START);
+//        } else {
+//            super.onBackPressed();
+//        }
+//        Log.i("onBackPressed","Después");
+//    }
 
     public void addInDb(List<Article> art)
     {
