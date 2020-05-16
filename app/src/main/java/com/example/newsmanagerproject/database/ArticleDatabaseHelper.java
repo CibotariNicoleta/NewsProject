@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import static com.example.newsmanagerproject.database.DatabaseConstants.DB_TABLE_ARTICLE_NAME;
 
 public class ArticleDatabaseHelper extends SQLiteOpenHelper {
-    private static final String DATABASE_NAME = "ArticlesDB";
+    private static final String DATABASE_NAME = "Articles_DB";
     private static final int DATABASE_VERSION = 3;
 
     public ArticleDatabaseHelper(Context context){
