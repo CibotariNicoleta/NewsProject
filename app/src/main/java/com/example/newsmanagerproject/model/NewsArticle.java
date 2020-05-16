@@ -30,7 +30,7 @@ public class NewsArticle extends AppCompatActivity {
 
         articleNews=(Article)getIntent().getSerializableExtra("Article");
 
-        textTitle=(TextView) findViewById(R.id.text_category);
+        textTitle=(TextView) findViewById(R.id.text_title);
         textTitle.setText(articleNews.getTitleText());
 
         category=(TextView) findViewById(R.id.text_category);

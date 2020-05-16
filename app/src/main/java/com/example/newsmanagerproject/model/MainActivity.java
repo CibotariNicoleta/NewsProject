@@ -177,16 +177,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
         }
         if(f!=null){
-            //Send data from database
-
-
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment,f).commit();
-//            item.setChecked(true);
-            getSupportActionBar().setTitle(item.getTitle());
-            drawerLayout.closeDrawers();
+            getSupportFragmentManager().beginTransaction().replace(R.id.list,f).commit();
+            item.setChecked(true);
+            drawerLayout.closeDrawer(GravityCompat.START);
         }
+        Log.i("onNaviSelec","Despues");
         //To select item when is triggered
         return false;
+
     }
 
     //This method allow manage the actions whenever any menu item is selected
@@ -212,16 +210,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         startActivity(intentNewsArticle);
     }
 
-//    @Override
-//    public void onBackPressed() {
-//        Log.i("onBackPressed","Antes");
-//        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-//            drawerLayout.closeDrawer(GravityCompat.START);
-//        } else {
-//            super.onBackPressed();
-//        }
-//        Log.i("onBackPressed","Después");
-//    }
+    @Override
+    public void onBackPressed() {
+        Log.i("onBackPressed","Antes");
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+        Log.i("onBackPressed","Después");
+    }
 
     public void addInDb(List<Article> art)
     {
