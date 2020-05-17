@@ -287,7 +287,7 @@ public class ModelManager {
         return result;
     }
 
-    private static int saveArticle(Article a) throws ServerComnmunicationError{
+    public static int saveArticle(Article a) throws ServerComnmunicationError{
         try{
             String parameters =  "";
             String request = rc.serviceUrl + "article";

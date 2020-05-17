@@ -21,36 +21,50 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.newsmanagerproject.LoadArticlesTask;
 import com.example.newsmanagerproject.R;
+import com.example.newsmanagerproject.network.ModelManager;
+import com.example.newsmanagerproject.network.errors.ServerComnmunicationError;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
-public class creatArticle extends AppCompatActivity  {
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Properties;
+import java.util.concurrent.ExecutionException;
+
+import static com.example.newsmanagerproject.network.RESTConnection.ATTR_REQUIRE_SELF_CERT;
+import static com.example.newsmanagerproject.network.RESTConnection.ATTR_SERVICE_URL;
+
+public class creatArticle extends AppCompatActivity {
     private Spinner spinner;
-    private FloatingActionButton saveButton,cancelButton;
-    private EditText text_title,text_abstract,text_subtitle,text_body;
+    private FloatingActionButton saveButton, cancelButton;
+    private EditText text_title, text_abstract, text_subtitle, text_body;
     private String categoryST;
     private Article articleCreated;
     private Dialog myDialog;
-    private String titleST,abstractST,subtitleST,bodyST;
+    private String titleST, abstractST, subtitleST, bodyST;
     private TextView category_text, title_text, abstract_text, subtitle_text, body_text;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create);
 
         //For PopUp
-        myDialog= new Dialog(this);
+        myDialog = new Dialog(this);
         //Code to get the data of the spinner
-        spinner =findViewById(R.id.spinner_categories);
+        spinner = findViewById(R.id.spinner_categories);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 categoryST = spinner.getSelectedItem().toString();
-                Snackbar.make(view,"Item selected -> "+categoryST,Snackbar.LENGTH_LONG).show();
+                Snackbar.make(view, "Item selected -> " + categoryST, Snackbar.LENGTH_LONG).show();
             }
+
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
         });
 
         // Create an ArrayAdapter using the string array and a default spinner layout
@@ -62,8 +76,8 @@ public class creatArticle extends AppCompatActivity  {
         spinner.setAdapter(adapter);
 
         //Get all data
-        text_title=findViewById(R.id.text_create_title);
-        titleST=text_title.getText().toString();
+        text_title = findViewById(R.id.text_create_title);
+        titleST = text_title.getText().toString();
         text_title.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -72,17 +86,17 @@ public class creatArticle extends AppCompatActivity  {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                titleST=s.toString();
+                titleST = s.toString();
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                titleST=s.toString();
+                titleST = s.toString();
             }
         });
 
-        text_abstract=findViewById(R.id.text_create_abstract);
-        abstractST=text_abstract.getText().toString();
+        text_abstract = findViewById(R.id.text_create_abstract);
+        abstractST = text_abstract.getText().toString();
         text_abstract.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -91,17 +105,17 @@ public class creatArticle extends AppCompatActivity  {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                abstractST=s.toString();
+                abstractST = s.toString();
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                abstractST=s.toString();
+                abstractST = s.toString();
             }
         });
 
-        text_subtitle=findViewById(R.id.text_create_subtitle);
-        subtitleST=text_subtitle.getText().toString();
+        text_subtitle = findViewById(R.id.text_create_subtitle);
+        subtitleST = text_subtitle.getText().toString();
         text_subtitle.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -110,17 +124,17 @@ public class creatArticle extends AppCompatActivity  {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                subtitleST=s.toString();
+                subtitleST = s.toString();
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                subtitleST=s.toString();
+                subtitleST = s.toString();
             }
         });
 
-        text_body=findViewById(R.id.text_create_body);
-        bodyST=text_body.getText().toString();
+        text_body = findViewById(R.id.text_create_body);
+        bodyST = text_body.getText().toString();
         text_body.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -129,12 +143,12 @@ public class creatArticle extends AppCompatActivity  {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                bodyST=s.toString();
+                bodyST = s.toString();
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                bodyST=s.toString();
+                bodyST = s.toString();
             }
         });
 
@@ -147,39 +161,41 @@ public class creatArticle extends AppCompatActivity  {
             }
         });
 
-        cancelButton=findViewById(R.id.cancel_article_button);
+        cancelButton = findViewById(R.id.cancel_article_button);
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Snackbar.make(v,"Cancelling Creating Article Operation",Snackbar.LENGTH_LONG).show();
+                Snackbar.make(v, "Cancelling Creating Article Operation", Snackbar.LENGTH_LONG).show();
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        Intent i=new Intent(getApplicationContext(),MainActivity.class);
+                        Intent i = new Intent(getApplicationContext(), MainActivity.class);
                         startActivity(i);
                     }
                 }, 1000);
             }
         });
     }
-    private void goSave(View v){
-        String user="12";
-        if(isValidated()){
-            articleCreated=new Article(categoryST,titleST,abstractST,bodyST,subtitleST,user);
+
+    private void goSave(View v) {
+        String user = "12";
+        if (isValidated()) {
+            articleCreated = new Article(categoryST, titleST, abstractST, bodyST, subtitleST, user);
+            articleCreated.id=1;
             ShowPopUp(v);
 //            Intent intentShow= new Intent(getApplicationContext(),PopActivity.class);
 //            //To send Article to PopUp Class
 //            intentShow.putExtra("ArticleCreated", articleCreated);
 //            startActivity(intentShow);
-        }
-        else{
-            Snackbar.make(v,"Please, complete all the fields",Snackbar.LENGTH_LONG).show();
+
+        } else {
+            Snackbar.make(v, "Please, complete all the fields", Snackbar.LENGTH_LONG).show();
         }
     }
 
-    private boolean isValidated(){
+    private boolean isValidated() {
 
-        if(!titleST.matches("") && !abstractST.matches("") && !subtitleST.matches("") && !bodyST.matches("")){
+        if (!titleST.matches("") && !abstractST.matches("") && !subtitleST.matches("") && !bodyST.matches("")) {
             Log.i("TaG", "Validates:  FULL");
             return true;
         }
@@ -187,10 +203,10 @@ public class creatArticle extends AppCompatActivity  {
         return false;
     }
 
-    public void ShowPopUp(View v){
+    public void ShowPopUp(View v) {
 
         myDialog.setContentView(R.layout.activity_popup);
-        FloatingActionButton buttonPopUpArticle= myDialog.findViewById(R.id.checkButton);
+        FloatingActionButton buttonPopUpArticle = myDialog.findViewById(R.id.checkButton);
         category_text = myDialog.findViewById(R.id.category_created);
         category_text.setText(articleCreated.getCategory());
 
@@ -214,8 +230,34 @@ public class creatArticle extends AppCompatActivity  {
             public void onClick(View v) {
                 //We have to send create Request To API
 
+                // We call loadTask method
+
+
+
+                //Create the params cuz is a new instance
+
+                int res=0;
+                try {
+                    res=ModelManager.saveArticle(articleCreated);
+                } catch (ServerComnmunicationError serverComnmunicationError) {
+                    serverComnmunicationError.printStackTrace();
+                }
+                String var=Integer.toString(res);
+                Snackbar.make(v,"Resultado de la llamada es-> "+ var ,Snackbar.LENGTH_LONG).show();
+//                LoadArticlesTask loadArticlesTask;
+//                loadArticlesTask = new LoadArticlesTask(getBaseContext());
+//                try {
+//
+//                    loadArticlesTask.execute().get();
+//                } catch (ExecutionException e) {
+//                    e.printStackTrace();
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+
+
                 //And go to Main Activity
-                Intent intentMainAct= new Intent(getApplicationContext(),MainActivity.class);
+                Intent intentMainAct = new Intent(getApplicationContext(), MainActivity.class);
 //            //To send Article to PopUp Class
                 startActivity(intentMainAct);
             }

@@ -24,6 +24,7 @@ import com.example.newsmanagerproject.LoadArticlesTask;
 import com.example.newsmanagerproject.Login;
 import com.example.newsmanagerproject.R;
 import com.example.newsmanagerproject.database.ArticleDB;
+import com.example.newsmanagerproject.database.ArticleDatabaseHelper;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
@@ -38,6 +39,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private LoadArticlesTask loadArticlesTask;
     private FloatingActionButton loginButon;
     private List<Article> listRes=null;
+
+    ArticleDatabaseHelper dbHelper=new ArticleDatabaseHelper(getBaseContext());
+
 
     private ArticleDB dbArticle;
     //Variables for sideBar
@@ -79,6 +83,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
+        //Voy a ver la base de datos
 
 
         //Create adapater to display data in the user screen
@@ -125,16 +131,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //        });
 
         //BUTTONS Action
-        loginButon = (FloatingActionButton) findViewById(R.id.loginButton);
-        Log.i("LoginButton","Antes del loginButton");
-        loginButon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.i("LoginButton","Antes de llamar al login");
-                Intent intent = new Intent(getApplicationContext(), Login.class);
-                startActivity(intent);
-            }
-        });
+
         Log.i("LoginButton","DESPUES del loginButton");
     }
 
@@ -177,7 +174,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
         }
         if(f!=null){
-            getSupportFragmentManager().beginTransaction().replace(R.id.list,f).commit();
+            //Convert list in serialize object
+            ArrayList<Article> listSerialize = new ArrayList<>(listRes);
+            //Send information to AllFragment
+            getIntent().putExtra("listArticle",listSerialize);
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment,f).commit();
             item.setChecked(true);
             drawerLayout.closeDrawer(GravityCompat.START);
         }

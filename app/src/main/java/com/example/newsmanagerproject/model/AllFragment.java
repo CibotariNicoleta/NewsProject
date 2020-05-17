@@ -13,8 +13,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.newsmanagerproject.Login;
 import com.example.newsmanagerproject.R;
 import com.example.newsmanagerproject.database.ArticleDB;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,6 +29,7 @@ public class AllFragment extends Fragment {
     private NewsAdapter myAdapter;
     private ArrayList<Article>arrayArticle;
     private List<Article> listRes;
+    private FloatingActionButton loginButon;
     public AllFragment(){
 
     }
@@ -42,7 +45,7 @@ public class AllFragment extends Fragment {
         Log.i("Article Recived", arrayArticle.get(0).getCategory());
 
         // This part will show a list of articles
-          recyclerView = (ListView) root.findViewById(R.id.list);
+          recyclerView = (ListView) root.findViewById(R.id.list_all);
 
         // Convert ArrayList to List of Articles
         listRes=arrayArticle.subList(0,arrayArticle.size()-1);
@@ -64,15 +67,20 @@ public class AllFragment extends Fragment {
                 //goNewsArticle(view, position);
             }
         });
+
+        loginButon = (FloatingActionButton) root.findViewById(R.id.loginButton);
+        Log.i("LoginButton","Antes del loginButton");
+        loginButon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i("LoginButton","Antes de llamar al login");
+                Intent intent = new Intent(getContext(), Login.class);
+                startActivity(intent);
+            }
+        });
+
         return root;
 
-    }
-
-
-    public void addInDb(List<Article> art)
-    {
-        for(Article r:art)
-            ArticleDB.saveNewMessage(r);
     }
 
 }
