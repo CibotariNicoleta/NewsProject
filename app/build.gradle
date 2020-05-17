@@ -44,7 +44,9 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation('com.googlecode.json-simple:json-simple:1.1.1') { exclude group: 'org.hamcrest', module: 'hamcrest-core' }
+    implementation('com.googlecode.json-simple:json-simple:1.1.1') {
+        exclude group: 'org.hamcrest', module: 'hamcrest-core'
+    }
     implementation "androidx.constraintlayout:constraintlayout:2.0.0-beta4"
 
 

@@ -1,6 +1,7 @@
 package com.example.newsmanagerproject.model;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -26,6 +27,7 @@ import com.example.newsmanagerproject.R;
 import com.example.newsmanagerproject.database.ArticleDB;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     DrawerLayout drawerLayout;
     NavigationView navigationView;
 
-    public static boolean isLogged = false;
+   // public static boolean isLogged = false;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -96,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             navigationView.setCheckedItem(R.id.category_all);
         }
 
-        if (!isLogged) {
+        if (!Login.isLogged) {
             Log.i("Tag", "No está logueado");
         }
 
@@ -127,13 +129,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         //BUTTONS Action
         loginButon = (FloatingActionButton) findViewById(R.id.loginButton);
+
         Log.i("LoginButton","Antes del loginButton");
         loginButon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Login.isLogged=true;
+                // loginButon.setVisibility(View.GONE);
+                //NewsAdapter.deleteButton.setVisibility(View.VISIBLE);
+                //NewsAdapter.deleteButton.setVisibility(View.VISIBLE);
+
                 Log.i("LoginButton","Antes de llamar al login");
                 Intent intent = new Intent(getApplicationContext(), Login.class);
                 startActivity(intent);
+
             }
         });
         Log.i("LoginButton","DESPUES del loginButton");
@@ -144,14 +153,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         Log.i("onNaviSelec","Antes");
         Fragment f= null;
+
         switch (item.getItemId()) {
             case R.id.nav_home:
                 Intent intentHome = new Intent(this, MainActivity.class);
                 startActivity(intentHome);
                 break;
             case R.id.nav_create:
+                if(Login.isLogged){
                 Intent intentAddArticle = new Intent(this, creatArticle.class);
-                startActivity(intentAddArticle);
+                startActivity(intentAddArticle); }
                 break;
             case R.id.category_national:
 //                getSupportFragmentManager().beginTransaction().replace(R.id., new NationalFragment()).commit();
@@ -174,6 +185,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 f=new AllFragment();
                 break;
             case R.id.nav_logout:
+                Login.isLogged = false;
+
+                MenuItem logout = (MenuItem) findViewById(R.id.nav_logout);
+                item.setVisible(false);
+
+                MenuItem create = (MenuItem) findViewById(R.id.nav_create);
+                item.setVisible(false);
+
+                //loginButon.setVisibility(View.VISIBLE);
+                NewsAdapter.deleteButton.setVisibility(View.GONE);
+                NewsAdapter.modifyButton.setVisibility(View.GONE);
+
+
                 /// WE HAVE TO IMPLEMENT LOGOUT FUNCTION
                 break;
         }

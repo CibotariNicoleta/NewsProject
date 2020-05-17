@@ -34,6 +34,7 @@ public class ArticleDB {
                 null,null,null,null,
                 null,DatabaseConstants.DB_TABLE_FIELD_ARTICLE_LASTUPDATE);
         cursor.moveToFirst();
+
         int id_test=0;
         while (!cursor.isAfterLast())
         {
@@ -70,6 +71,9 @@ public class ArticleDB {
         long insertId = db.insert(DatabaseConstants.DB_TABLE_ARTICLE_NAME, null, values);
 
         Logger.log (Logger.INFO, "saveeee" + " --------- >>>>>>>(Article) retrieved"); }
+        else{
+           // helper.update(m);
+        }
 
     }
 

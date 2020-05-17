@@ -323,7 +323,7 @@ public class ModelManager {
         }
     }
 
-    private static void deleteArticle(int idArticle) throws ServerComnmunicationError{
+    public static void deleteArticle(int idArticle) throws ServerComnmunicationError{
         try{
             String parameters =  "";
             String request = rc.serviceUrl + "article/" + idArticle;
