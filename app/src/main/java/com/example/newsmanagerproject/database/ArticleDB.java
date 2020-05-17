@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+import android.widget.SimpleCursorAdapter;
 
 import com.example.newsmanagerproject.model.Article;
 import com.example.newsmanagerproject.model.Logger;
@@ -25,9 +26,27 @@ public class ArticleDB {
         helper = new ArticleDatabaseHelper(c);
     }
     public static void saveNewMessage(Article m){
-        SQLiteDatabase db = helper.getWritableDatabase();
+
+
         ContentValues values = new ContentValues();
-       // values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_ID, m.getId());
+        SQLiteDatabase dbd = helper.getReadableDatabase();
+        Cursor cursor = dbd.query(DatabaseConstants.DB_TABLE_ARTICLE_NAME,
+                null,null,null,null,
+                null,DatabaseConstants.DB_TABLE_FIELD_ARTICLE_LASTUPDATE);
+        cursor.moveToFirst();
+        int id_test=0;
+        while (!cursor.isAfterLast())
+        {
+            int id = cursor.getInt(0);
+            if((id == m.getId()) && (cursor.getInt(1) == m.getIdUser()) )
+                id_test = 1;
+
+            cursor.moveToNext();
+        }
+        if(id_test == 0){
+            Logger.log (Logger.INFO, "uuu" + " --------- >>>>>>>(Article) retrieved");
+            SQLiteDatabase db = helper.getWritableDatabase();
+        values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_ID, m.getId());
         values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_IDUSER,m.getIdUser());
         values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_TITLE,m.getTitleText());
         values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_CATEGORY,m.getCategory());
@@ -49,8 +68,8 @@ public class ArticleDB {
             serverComnmunicationError.printStackTrace();
         }
         long insertId = db.insert(DatabaseConstants.DB_TABLE_ARTICLE_NAME, null, values);
-        Logger.log (Logger.INFO, insertId + " objects (Article) retrieved");
 
+        Logger.log (Logger.INFO, "saveeee" + " --------- >>>>>>>(Article) retrieved"); }
 
     }
 
@@ -104,6 +123,8 @@ public class ArticleDB {
             article.setImageData(imageData);
             result.add(article);
             cursor.moveToNext();
+            Logger.log (Logger.INFO, id + " --------- >>>>>>>(Article) retrieved");
+
         }
 
         return result;

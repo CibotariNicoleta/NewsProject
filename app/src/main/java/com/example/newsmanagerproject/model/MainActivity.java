@@ -89,10 +89,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         //Create adapater to display data in the user screen
         listRes = ArticleDB.loadAllMessages();
-
         //Get articles from DB
         //Convert list in serialize object
         ArrayList<Article> listSerialize = new ArrayList<>(listRes);
+
+
         //Send information to AllFragment
         getIntent().putExtra("listArticle",listSerialize);
 

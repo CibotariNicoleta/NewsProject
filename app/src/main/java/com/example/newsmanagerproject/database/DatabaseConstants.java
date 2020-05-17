@@ -1,7 +1,7 @@
 package com.example.newsmanagerproject.database;
 
 public class DatabaseConstants {
-    public static final String DB_TABLE_ARTICLE_NAME = "ArticleDB";
+    public static final String DB_TABLE_ARTICLE_NAME = "Article_DB";
     public static final String DB_TABLE_FIELD_ARTICLE_ID = "id";
     public static final String DB_TABLE_FIELD_ARTICLE_IDUSER = "idUser";
     public static final String DB_TABLE_FIELD_ARTICLE_TITLE = "title";
