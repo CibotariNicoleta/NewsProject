@@ -60,6 +60,7 @@
             android:text="@string/newsabstract"
             android:textColor="@android:color/black"
             android:textSize="12sp" />
+
         </RelativeLayout>
 
     </androidx.cardview.widget.CardView>
@@ -91,6 +92,8 @@
         android:clickable="true"
         app:srcCompat="@drawable/ic_update_black_24dp"
         android:focusable="true" />
+
+
 
 
 </RelativeLayout>

@@ -108,6 +108,7 @@ public class NewsAdapter extends ArrayAdapter<Article>{
         TextView Abstract = (TextView) listItem.findViewById(R.id.newsAbstract);
         Abstract.setText(article.getAbstractText());
 
+
         //onClick method
 
 
@@ -124,6 +125,12 @@ public class NewsAdapter extends ArrayAdapter<Article>{
         modifyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent(mContext, creatArticle.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("Article", article);
+                intent.putExtras(bundle);
+                mContext.startActivity(intent);
+
                 Snackbar.make(v,"ModifyButton",Snackbar.LENGTH_SHORT);
             }
         });

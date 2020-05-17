@@ -61,6 +61,19 @@ public class creatArticle extends AppCompatActivity  {
         // Apply the adapter to the spinner
         spinner.setAdapter(adapter);
 
+        //update article
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+           // String article = extras.getString("article_update");
+            //The key argument here must match that used in the other activity
+        }
+
+
+        Article ex = (Article) getIntent().getSerializableExtra("Article");
+        if(ex != null){
+            articleCreated = ex;
+        }
+
         //Get all data
         text_title=findViewById(R.id.text_create_title);
         titleST=text_title.getText().toString();
@@ -161,6 +174,10 @@ public class creatArticle extends AppCompatActivity  {
                 }, 1000);
             }
         });
+
+
+        //here we get value
+
     }
     private void goSave(View v){
         String user="12";
