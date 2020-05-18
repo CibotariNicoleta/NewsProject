@@ -63,11 +63,17 @@ public class LoadArticlesTask  extends AsyncTask<Void, Void, List<Article>> {
                 Log.d("El usuario es ->",ModelManager.getIdUser() );
                 Log.d("Con la clave de API->",ModelManager.getLoggedApiKey() );
                 //System.out.println("El usuario es ->"+ ModelManager.getIdUser() +"Con la clave de API->" +ModelManager.getLoggedApiKey());//BORRAR
-                //Consulta a la base de datos
-                if(ArticleDB.getLength()<offset){
+
+                //Querying database for the Article_DB´s count
+                // to recude the number of calls to server
+                //If our DB index is bigger than offset
+                // the app only load the articles in DB
+                if(offset<ArticleDB.getLength()){
                     res=ArticleDB.loadAllMessages();
                     offset=ArticleDB.getLength();
                 }
+                //If the offset is bigger. Then we need to load more
+                // articles and save them in DB
                 else{
                     res = ModelManager.getArticles(10, offset);
                     offset=offset+10;
