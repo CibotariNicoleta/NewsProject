@@ -33,7 +33,6 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-
     private ListView recyclerView;
     private NewsAdapter myAdapter;
     private LoadArticlesTask loadArticlesTask;
@@ -41,7 +40,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private List<Article> listRes=null;
 
     ArticleDatabaseHelper dbHelper=new ArticleDatabaseHelper(getBaseContext());
-
 
     private ArticleDB dbArticle;
     //Variables for sideBar
@@ -92,8 +90,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //Get articles from DB
         //Convert list in serialize object
         ArrayList<Article> listSerialize = new ArrayList<>(listRes);
-
-
         //Send information to AllFragment
         getIntent().putExtra("listArticle",listSerialize);
 
@@ -106,33 +102,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Log.i("Tag", "No está logueado");
         }
 
-        // This part will show a list of articles
-        //recyclerView = findViewById(R.id.list);  DESCOMENTAR LUEGO
-
-
-
-
-
-//        myAdapter = new NewsAdapter(this, listRes);
-//        recyclerView.setAdapter(myAdapter);
-
-        // This let us set every item clickable LUEGO DESCOMENTARTodo
-//        recyclerView.setClickable(true);
-//
-//        recyclerView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//
-//            //When we clicked any  item of the list view. This action will ocurre
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//
-////                Snackbar.make(view, "Element clicked -> " + position, Snackbar.LENGTH_LONG).show();
-////                Log.i("Click", "click en el elemento " + position + " de mi ListView");
-//                goNewsArticle(view, position);
-//            }
-//        });
-
         //BUTTONS Action
-
         Log.i("LoginButton","DESPUES del loginButton");
     }
 
@@ -151,27 +121,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(intentAddArticle);
                 break;
             case R.id.category_national:
-//                getSupportFragmentManager().beginTransaction().replace(R.id., new NationalFragment()).commit();
                 f=new NationalFragment();
                 break;
             case R.id.category_economy:
-//                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_view_tag, new EconomyFragment()).commit();
                 f=new EconomyFragment();
                 break;
             case R.id.category_sports:
-//                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_view_tag, new SportsFragment()).commit();
                 f=new SportsFragment();
                 break;
             case R.id.category_technology:
-//                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_view_tag, new TechnologyFragment()).commit();
                 f=new TechnologyFragment();
                 break;
             case R.id.category_all:
-//                getSupportFragmentManager().beginTransaction().replace(R.id.list, new AllFragment()).commit();
                 f=new AllFragment();
                 break;
             case R.id.nav_logout:
-                /// WE HAVE TO IMPLEMENT LOGOUT FUNCTION
                 break;
         }
         if(f!=null){

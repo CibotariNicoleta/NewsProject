@@ -23,6 +23,7 @@ import static com.example.newsmanagerproject.network.RESTConnection.ATTR_SERVICE
 public class LoadArticlesTask  extends AsyncTask<Void, Void, List<Article>> {
 
     private static final String TAG = "LoadArticlesTask";
+    private static int offset=0;
     Context context;
     public LoadArticlesTask(Context cont) {
         super();
@@ -61,12 +62,8 @@ public class LoadArticlesTask  extends AsyncTask<Void, Void, List<Article>> {
                 Log.d("El usuario es ->",ModelManager.getIdUser() );
                 Log.d("Con la clave de API->",ModelManager.getLoggedApiKey() );
                 //System.out.println("El usuario es ->"+ ModelManager.getIdUser() +"Con la clave de API->" +ModelManager.getLoggedApiKey());//BORRAR
-                res = ModelManager.getArticles(6, 0);
-//                for (Article article : res) {
-//                    // We print articles in Log
-//                    Log.i(TAG, String.valueOf(article));
-//
-//                }
+                res = ModelManager.getArticles(10, offset);
+                offset=offset+10;
             } catch (ServerComnmunicationError e) {
                 Log.e(TAG,e.getMessage());
             }
