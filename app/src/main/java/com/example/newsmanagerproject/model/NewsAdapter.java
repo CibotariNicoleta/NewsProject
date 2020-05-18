@@ -41,8 +41,6 @@ public class NewsAdapter extends ArrayAdapter<Article>{
     private Context mContext;
     private List<Article> articles = new ArrayList<>();
     private FrameLayout frameLayout;
-    private FloatingActionButton deleteButton;
-    private FloatingActionButton modifyButton;
 
     public NewsAdapter(@NonNull Context context,  List<Article> list) {
         super(context, 0 , list);
@@ -60,8 +58,8 @@ public class NewsAdapter extends ArrayAdapter<Article>{
 
         myCard = listItem.findViewById(R.id.myCard);
 
-        deleteButton= listItem.findViewById(R.id.deleteButton);
-        modifyButton= listItem.findViewById(R.id.modifyButton);
+        FloatingActionButton deleteButton = listItem.findViewById(R.id.deleteButton);
+        FloatingActionButton modifyButton = listItem.findViewById(R.id.modifyButton);
 
         final Article article = articles.get(position);
 
