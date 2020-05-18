@@ -133,7 +133,7 @@ public class ArticleDB {
     public static int getLength(){
         int res;
         SQLiteDatabase dbd = helper.getReadableDatabase();
-        res=(int) DatabaseUtils.queryNumEntries(dbd,"ArticleDB");
+        res=(int) DatabaseUtils.queryNumEntries(dbd,"Article_DB");
         return res;
     }
 }
