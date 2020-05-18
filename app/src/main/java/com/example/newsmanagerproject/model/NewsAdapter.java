@@ -117,11 +117,4 @@ public class NewsAdapter extends ArrayAdapter<Article>{
         });
         return listItem;
     }
-
-    private boolean isLogged(){
-        return isLogged;
-    }
-
-
-
 }
