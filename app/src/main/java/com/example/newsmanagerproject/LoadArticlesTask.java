@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 
+import com.example.newsmanagerproject.database.ArticleDB;
 import com.example.newsmanagerproject.model.Article;
 import com.example.newsmanagerproject.model.MainActivity;
 import com.example.newsmanagerproject.network.ModelManager;
@@ -62,8 +63,16 @@ public class LoadArticlesTask  extends AsyncTask<Void, Void, List<Article>> {
                 Log.d("El usuario es ->",ModelManager.getIdUser() );
                 Log.d("Con la clave de API->",ModelManager.getLoggedApiKey() );
                 //System.out.println("El usuario es ->"+ ModelManager.getIdUser() +"Con la clave de API->" +ModelManager.getLoggedApiKey());//BORRAR
-                res = ModelManager.getArticles(10, offset);
-                offset=offset+10;
+                //Consulta a la base de datos
+                if(ArticleDB.getLength()<offset){
+                    res=ArticleDB.loadAllMessages();
+                    offset=ArticleDB.getLength();
+                }
+                else{
+                    res = ModelManager.getArticles(10, offset);
+                    offset=offset+10;
+                    addInDb(res);
+                }
             } catch (ServerComnmunicationError e) {
                 Log.e(TAG,e.getMessage());
             }
@@ -75,6 +84,14 @@ public class LoadArticlesTask  extends AsyncTask<Void, Void, List<Article>> {
 
     public void postExecute(List<Article> res){
 
+    }
+    public static int getOffset(){
+        return offset;
+    }
+    public void addInDb(List<Article> art)
+    {
+        for(Article r:art)
+            ArticleDB.saveNewMessage(r);
     }
 }
 

@@ -3,6 +3,7 @@ package com.example.newsmanagerproject.database;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import android.widget.SimpleCursorAdapter;
@@ -128,6 +129,12 @@ public class ArticleDB {
         }
 
         return result;
+    }
+    public static int getLength(){
+        int res;
+        SQLiteDatabase dbd = helper.getReadableDatabase();
+        res=(int) DatabaseUtils.queryNumEntries(dbd,"ArticleDB");
+        return res;
     }
 }
 

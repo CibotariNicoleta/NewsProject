@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.newsmanagerproject.LoadArticlesTask;
 import com.example.newsmanagerproject.Login;
 import com.example.newsmanagerproject.R;
 import com.example.newsmanagerproject.database.ArticleDB;
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.ExecutionException;
 
 public class AllFragment extends Fragment {
 
@@ -30,6 +32,7 @@ public class AllFragment extends Fragment {
     private ArrayList<Article>arrayArticle;
     private List<Article> listRes;
     private FloatingActionButton loginButon;
+    private LoadArticlesTask loadArticlesTask;
     public AllFragment(){
 
     }
@@ -40,15 +43,19 @@ public class AllFragment extends Fragment {
         View root=inflater.inflate(R.layout.fragment_all,container,false);
         Intent articles= Objects.requireNonNull(getActivity()).getIntent();
 
-        arrayArticle=(ArrayList<Article>)articles.getSerializableExtra("listArticle");
-
-        Log.i("Article Recived", arrayArticle.get(0).getCategory());
+        //Tenemos que realizar llamadas al servicio loadTask
+        loadArticlesTask = new LoadArticlesTask(getContext());
+        try {
+            //add in db
+            listRes=loadArticlesTask.execute().get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         // This part will show a list of articles
-          recyclerView = (ListView) root.findViewById(R.id.list_all);
-
-        // Convert ArrayList to List of Articles
-        listRes=arrayArticle.subList(0,arrayArticle.size()-1);
+        recyclerView = (ListView) root.findViewById(R.id.list_all);
 
         myAdapter = new NewsAdapter(getContext(), listRes);
         recyclerView.setAdapter(myAdapter);

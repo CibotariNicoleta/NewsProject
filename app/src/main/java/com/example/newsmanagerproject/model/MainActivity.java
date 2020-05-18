@@ -71,28 +71,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
-        //Call the function to get the Article from server
-        loadArticlesTask = new LoadArticlesTask(this);
-        try {
-            //add in db
-            addInDb(loadArticlesTask.execute().get());
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        //Voy a ver la base de datos
-
-
-        //Create adapater to display data in the user screen
-        listRes = ArticleDB.loadAllMessages();
-        //Get articles from DB
-        //Convert list in serialize object
-        ArrayList<Article> listSerialize = new ArrayList<>(listRes);
-        //Send information to AllFragment
-        getIntent().putExtra("listArticle",listSerialize);
-
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment, new AllFragment()).commit();
             navigationView.setCheckedItem(R.id.category_all);
@@ -101,11 +79,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (!isLogged) {
             Log.i("Tag", "No está logueado");
         }
-
-        //BUTTONS Action
-        Log.i("LoginButton","DESPUES del loginButton");
     }
-
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -185,12 +159,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             super.onBackPressed();
         }
         Log.i("onBackPressed","Después");
-    }
-
-    public void addInDb(List<Article> art)
-    {
-        for(Article r:art)
-            ArticleDB.saveNewMessage(r);
     }
 
 }

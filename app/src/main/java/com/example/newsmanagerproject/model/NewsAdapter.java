@@ -60,16 +60,8 @@ public class NewsAdapter extends ArrayAdapter<Article>{
 
         myCard = listItem.findViewById(R.id.myCard);
 
-
-
-
         deleteButton= listItem.findViewById(R.id.deleteButton);
         modifyButton= listItem.findViewById(R.id.modifyButton);
-//!isLogged()
-     //  if(true){
-            //deleteButton.setVisibility(View.GONE);
-            //modifyButton.setVisibility(View.GONE);
-     //   }
 
         final Article article = articles.get(position);
 
