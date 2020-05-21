@@ -34,7 +34,7 @@ import java.util.List;
 
 import static com.example.newsmanagerproject.model.MainActivity.isLogged;
 
-public class NewsAdapter extends ArrayAdapter<Article>{
+public class NewsAdapter extends ArrayAdapter<Article> {
 
 
     private CardView myCard;
@@ -42,8 +42,8 @@ public class NewsAdapter extends ArrayAdapter<Article>{
     private List<Article> articles = new ArrayList<>();
     private FrameLayout frameLayout;
 
-    public NewsAdapter(@NonNull Context context,  List<Article> list) {
-        super(context, 0 , list);
+    public NewsAdapter(@NonNull Context context, List<Article> list) {
+        super(context, 0, list);
         this.mContext = context;
         articles = list;
     }
@@ -53,8 +53,8 @@ public class NewsAdapter extends ArrayAdapter<Article>{
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         View listItem = convertView;
-        if(listItem == null)
-            listItem = LayoutInflater.from(mContext).inflate(R.layout.list_item, parent,false);
+        if (listItem == null)
+            listItem = LayoutInflater.from(mContext).inflate(R.layout.list_item, parent, false);
 
         myCard = listItem.findViewById(R.id.myCard);
 
@@ -91,17 +91,17 @@ public class NewsAdapter extends ArrayAdapter<Article>{
         //onClick method
 
 
-     deleteButton.setOnClickListener(new View.OnClickListener() {
+        deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Snackbar.make(v,"DeleteButton",Snackbar.LENGTH_SHORT);
+                Snackbar.make(v, "DeleteButton", Snackbar.LENGTH_SHORT);
             }
         });
 
         modifyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Snackbar.make(v,"ModifyButton",Snackbar.LENGTH_SHORT);
+                Snackbar.make(v, "ModifyButton", Snackbar.LENGTH_SHORT);
             }
         });
 
@@ -109,10 +109,15 @@ public class NewsAdapter extends ArrayAdapter<Article>{
             @Override
             public void onClick(View v) {
                 Intent intentNewsArticle = new Intent(myCard.getContext(), NewsArticle.class);
-                intentNewsArticle.putExtra("Article",  article);
+                intentNewsArticle.putExtra("Article", article);
                 mContext.startActivity(intentNewsArticle);
             }
         });
         return listItem;
+    }
+
+    //This method add items to the arrayList
+    public void addArticlesList(List<Article> listArticles) {
+        articles.addAll(listArticles);
     }
 }
