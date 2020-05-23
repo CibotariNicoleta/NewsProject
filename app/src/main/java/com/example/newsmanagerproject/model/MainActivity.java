@@ -113,10 +113,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
         }
         if(f!=null){
-            //Convert list in serialize object
-            ArrayList<Article> listSerialize = new ArrayList<>(listRes);
-            //Send information to AllFragment
-            getIntent().putExtra("listArticle",listSerialize);
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment,f).commit();
             item.setChecked(true);
             drawerLayout.closeDrawer(GravityCompat.START);

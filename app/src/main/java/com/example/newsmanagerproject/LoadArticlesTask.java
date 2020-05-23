@@ -21,16 +21,18 @@ import java.util.Properties;
 import static com.example.newsmanagerproject.network.RESTConnection.ATTR_REQUIRE_SELF_CERT;
 import static com.example.newsmanagerproject.network.RESTConnection.ATTR_SERVICE_URL;
 
-public class LoadArticlesTask  extends AsyncTask<Void, Void, List<Article>> {
+public class LoadArticlesTask extends AsyncTask<Void, Void, List<Article>> {
 
     private static final String TAG = "LoadArticlesTask";
-    private static int offset=0;
+    private static int offset = 0;
     Context context;
+
     public LoadArticlesTask(Context cont) {
         super();
         this.context = cont;
         // TODO Auto-generated constructor stub
     }
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public List<Article> doInBackground(Void... voids) {
@@ -38,11 +40,11 @@ public class LoadArticlesTask  extends AsyncTask<Void, Void, List<Article>> {
         //added here
         Properties p = new Properties();
         p.put(ATTR_SERVICE_URL, "https://sanger.dia.fi.upm.es/pmd-task/");
-        p.put(ATTR_REQUIRE_SELF_CERT,"TRUE");
+        p.put(ATTR_REQUIRE_SELF_CERT, "TRUE");
         ModelManager.configureConnection(p);
-       String strIdUser = ModelManager.getIdUser(), strApiKey = ModelManager.getLoggedApiKey(), strIdAuthUser = ModelManager.getLoggedAuthType();
+        String strIdUser = ModelManager.getIdUser(), strApiKey = ModelManager.getLoggedApiKey(), strIdAuthUser = ModelManager.getLoggedAuthType();
         //ModelManager uses singleton pattern, connecting once per app execution in enough
-        if (!ModelManager.isConnected()){
+        if (!ModelManager.isConnected()) {
             // if it is the first login
             if (ModelManager.getIdUser() == null || ModelManager.getIdUser().equals("")) {
                 try {
@@ -52,35 +54,41 @@ public class LoadArticlesTask  extends AsyncTask<Void, Void, List<Article>> {
                 }
             }
             // if we have saved user credentials from previous connections
-            else{
-                ModelManager.stayloggedin(strIdUser,strApiKey,strIdAuthUser);
+            else {
+                ModelManager.stayloggedin(strIdUser, strApiKey, strIdAuthUser);
             }
         }
         //If connection has been successful
         if (ModelManager.isConnected()) {
             try {
                 // obtain 6 articles from offset 0
-                Log.d("El usuario es ->",ModelManager.getIdUser() );
-                Log.d("Con la clave de API->",ModelManager.getLoggedApiKey() );
+                Log.d("El usuario es ->", ModelManager.getIdUser());
+                Log.d("Con la clave de API->", ModelManager.getLoggedApiKey());
                 //System.out.println("El usuario es ->"+ ModelManager.getIdUser() +"Con la clave de API->" +ModelManager.getLoggedApiKey());//BORRAR
 
                 //Querying database for the Article_DB´s count
                 // to recude the number of calls to server
                 //If our DB index is bigger than offset
                 // the app only load the articles in DB
-                if(offset<ArticleDB.getLength()){
-                    res=ArticleDB.loadAllMessages();
-                    offset=ArticleDB.getLength();
+                int indexDB = ArticleDB.getLength();
+                int modDb = indexDB % 10;
+                if (offset < indexDB) {
+                    res = ArticleDB.loadArticles();
+                    if (modDb == 0) {
+                        offset = offset + 10;
+                    } else {
+                        offset = offset + modDb;
+                    }
                 }
                 //If the offset is bigger. Then we need to load more
                 // articles and save them in DB
-                else{
+                else {
                     res = ModelManager.getArticles(10, offset);
-                    offset=offset+10;
+                    offset = offset + 10;
                     addInDb(res);
                 }
             } catch (ServerComnmunicationError e) {
-                Log.e(TAG,e.getMessage());
+                Log.e(TAG, e.getMessage());
             }
         }
         // added here
@@ -88,15 +96,16 @@ public class LoadArticlesTask  extends AsyncTask<Void, Void, List<Article>> {
         return res;
     }
 
-    public void postExecute(List<Article> res){
+    public void postExecute(List<Article> res) {
 
     }
-    public static int getOffset(){
+
+    public static int getOffset() {
         return offset;
     }
-    public void addInDb(List<Article> art)
-    {
-        for(Article r:art)
+
+    public void addInDb(List<Article> art) {
+        for (Article r : art)
             ArticleDB.saveNewMessage(r);
     }
 }

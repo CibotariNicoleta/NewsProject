@@ -144,7 +144,7 @@ public class ArticleDB {
         Cursor cursor= db.rawQuery("SELECT * FROM Article_DB LIMIT 10 OFFSET "+ offset +";",null);
         cursor.moveToFirst();
         while(!cursor.isAfterLast()){
-            Article article=null;
+            Article article=new Article();
             int id = cursor.getInt(0);
             int idUser = cursor.getInt(1);
             String title = cursor.getString(2);
