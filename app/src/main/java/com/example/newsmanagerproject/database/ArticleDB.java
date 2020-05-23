@@ -22,6 +22,7 @@ import java.util.List;
 public class ArticleDB {
 
     private static ArticleDatabaseHelper helper;
+    private static int offset=0;
 
     public ArticleDB(Context c){
         helper = new ArticleDatabaseHelper(c);
@@ -135,6 +136,47 @@ public class ArticleDB {
         SQLiteDatabase dbd = helper.getReadableDatabase();
         res=(int) DatabaseUtils.queryNumEntries(dbd,"Article_DB");
         return res;
+    }
+
+    public static List<Article> loadArticles(){
+        SQLiteDatabase db = helper.getReadableDatabase();
+        List<Article> resList= new ArrayList<Article>();
+        Cursor cursor= db.rawQuery("SELECT * FROM Article_DB LIMIT 10 OFFSET "+ offset +";",null);
+        cursor.moveToFirst();
+        while(!cursor.isAfterLast()){
+            Article article=null;
+            int id = cursor.getInt(0);
+            int idUser = cursor.getInt(1);
+            String title = cursor.getString(2);
+            String category = cursor.getString(3);
+            String abst = cursor.getString(4);
+            String body = cursor.getString(5);
+            String subtitle = cursor.getString(6);
+            String ImageDescription = cursor.getString(7);
+            String thumbnail = cursor.getString(8);
+            Double lasupdate = cursor.getDouble(9);
+            String imageData = cursor.getString(10);
+
+
+            long myLong = System.currentTimeMillis() + ((long) (lasupdate * 1000));
+            Date itemDate = new Date(myLong);
+            article.setLastUpdate(itemDate);
+
+            article.setId(id);
+            article.setIdUser(idUser);
+            article.setTitleText(title);
+            article.setCategory(category);
+            article.setAbstractText(abst);
+            article.setBodyText(body);
+            article.setSubtitle(subtitle);
+            article.setImageDescription(ImageDescription);
+            article.setThumbnail(thumbnail);
+            article.setImageData(imageData);
+            resList.add(article);
+            cursor.moveToNext();
+        }
+        offset=offset+10;
+        return resList;
     }
 }
 
