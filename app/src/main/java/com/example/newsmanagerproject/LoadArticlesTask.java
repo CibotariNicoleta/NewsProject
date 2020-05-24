@@ -71,14 +71,9 @@ public class LoadArticlesTask extends AsyncTask<Void, Void, List<Article>> {
                 //If our DB index is bigger than offset
                 // the app only load the articles in DB
                 int indexDB = ArticleDB.getLength();
-                int modDb = indexDB % 10;
                 if (offset < indexDB) {
                     res = ArticleDB.loadArticles();
-                    if (modDb == 0) {
-                        offset = offset + 10;
-                    } else {
-                        offset = offset + modDb;
-                    }
+                    offset=offset+res.size();
                 }
                 //If the offset is bigger. Then we need to load more
                 // articles and save them in DB

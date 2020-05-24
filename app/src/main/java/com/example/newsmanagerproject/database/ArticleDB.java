@@ -178,5 +178,8 @@ public class ArticleDB {
         offset=offset+10;
         return resList;
     }
+    public static void resetOffset(){
+        offset=0;
+    }
 }
 
