@@ -1,11 +1,15 @@
 package com.example.newsmanagerproject.model;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
@@ -13,52 +17,69 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.newsmanagerproject.LoadArticlesTask;
 import com.example.newsmanagerproject.Login;
 import com.example.newsmanagerproject.R;
+import com.example.newsmanagerproject.database.ArticleDB;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.ExecutionException;
 
 public class NationalFragment extends Fragment {
 
     private ArrayList<Article> arrayArticle;
     private ListView recyclerView;
+    public Handler mhandler;
     private List<Article> listRes;
     private NewsAdapter myAdapter;
+    public View footerView;
     private FloatingActionButton loginButon;
+    public boolean isLoading = false;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root=inflater.inflate(R.layout.fragment_national,container,false);
 
-        Intent articles= Objects.requireNonNull(getActivity()).getIntent();
-        arrayArticle=(ArrayList<Article>)articles.getSerializableExtra("listArticle");
 
-        Log.i("Article Recived", arrayArticle.get(0).getCategory());
+        //Load articles from Database
+        ArticleDB.resetOffset();
+        listRes = ArticleDB.loadArticles();
+
 
         // This part will show a list of articles
         recyclerView = root.findViewById(R.id.list_national);
 
-        // Convert ArrayList to List of Articles
-        listRes=arrayArticle.subList(0,arrayArticle.size()-1);
+        //Set the footer
+        LayoutInflater li = (LayoutInflater) this.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        footerView = li.inflate(R.layout.footer_view, null);
 
-        myAdapter = new NewsAdapter(getContext(), getListFilter(listRes));
+        //Create handler
+        mhandler = new MyHandler();
+
+
+        myAdapter = new NewsAdapter(Objects.requireNonNull(getContext()), getListFilter(listRes));
         recyclerView.setAdapter(myAdapter);
 
         //This let us set every item clickable LUEGO DESCOMENTARTodo
         recyclerView.setClickable(true);
 
-        recyclerView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            //When we clicked any  item of the list view. This action will ocurre
+        recyclerView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
 
-//                Snackbar.make(view, "Element clicked -> " + position, Snackbar.LENGTH_LONG).show();
-//                Log.i("Click", "click en el elemento " + position + " de mi ListView");
-                //goNewsArticle(view, position);
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if (view.getLastVisiblePosition()==totalItemCount-1 && recyclerView.getCount()>=10 && !isLoading){
+                    isLoading=true;
+                    Thread thread = new ThreadGetMoreArticles();
+                    thread.start();
+                }
             }
         });
 
@@ -87,4 +108,54 @@ public class NationalFragment extends Fragment {
         return res;
     }
 
+    public class MyHandler extends Handler {
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            switch (msg.what) {
+                case 0:
+                    recyclerView.addFooterView(footerView);
+                    break;
+                case 1:
+                    //Update data adapater and UI
+                    myAdapter.addArticlesList((List<Article>) msg.obj);
+
+                    //To remove footer View
+                    recyclerView.removeFooterView(footerView);
+                    isLoading = false;
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    public class ThreadGetMoreArticles extends Thread {
+        @Override
+        public void run() {
+            //Add footer view
+            mhandler.sendEmptyMessage(0);
+
+            //Look for more data
+            List<Article> getList=new ArrayList<Article>();
+            LoadArticlesTask loadArticlesTask = new LoadArticlesTask(getContext());
+            try {
+                //add in db
+                getList = loadArticlesTask.execute().get();
+                getList=getListFilter(getList);
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            //Sending the result
+            Message msgRes = mhandler.obtainMessage(1, getList);
+            mhandler.sendMessage(msgRes);
+
+        }
+    }
 }
