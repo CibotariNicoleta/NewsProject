@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -34,6 +35,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -107,6 +109,11 @@ public class NewsAdapter extends ArrayAdapter<Article>{
 
         TextView Abstract = (TextView) listItem.findViewById(R.id.newsAbstract);
         Abstract.setText(article.getAbstractText());
+
+        SimpleDateFormat formatter = new SimpleDateFormat(
+                "yyyy-MM-dd HH:mm:ss");
+        EditText date = (EditText) listItem.findViewById(R.id.date_and_time);
+        date.setText(formatter.format(article.getLastUpdate()));
 
 
         //onClick method
