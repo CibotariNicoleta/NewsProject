@@ -90,7 +90,7 @@ public class AllFragment extends Fragment {
         });
 
 
-        FloatingActionButton loginButon = (FloatingActionButton) root.findViewById(R.id.loginButton);
+        FloatingActionButton loginButon = root.findViewById(R.id.loginButton);
         Log.i("LoginButton", "Antes del loginButton");
         loginButon.setOnClickListener(new View.OnClickListener() {
             @Override
