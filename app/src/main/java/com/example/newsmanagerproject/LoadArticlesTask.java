@@ -15,6 +15,7 @@ import com.example.newsmanagerproject.network.ModelManager;
 import com.example.newsmanagerproject.network.errors.AuthenticationError;
 import com.example.newsmanagerproject.network.errors.ServerComnmunicationError;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
@@ -27,16 +28,15 @@ public class LoadArticlesTask extends AsyncTask<Void, Void, List<Article>> {
     private static int offset = 0;
     Context context;
 
-    public LoadArticlesTask(Context cont) {
+    public LoadArticlesTask() {
         super();
-        this.context = cont;
         // TODO Auto-generated constructor stub
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public List<Article> doInBackground(Void... voids) {
-        List<Article> res = null;
+        List<Article> res = new ArrayList<Article>();
         //added here
         Properties p = new Properties();
         p.put(ATTR_SERVICE_URL, "https://sanger.dia.fi.upm.es/pmd-task/");
@@ -79,8 +79,10 @@ public class LoadArticlesTask extends AsyncTask<Void, Void, List<Article>> {
                 // articles and save them in DB
                 else {
                     res = ModelManager.getArticles(10, offset);
-                    offset = offset + 10;
-                    addInDb(res);
+                    if(res.size()!=0){
+                        offset = offset + 10;
+                        addInDb(res);
+                    }
                 }
             } catch (ServerComnmunicationError e) {
                 Log.e(TAG, e.getMessage());

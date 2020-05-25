@@ -18,10 +18,13 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 
 
 import com.example.newsmanagerproject.LoadArticlesTask;
 import com.example.newsmanagerproject.Login;
+import com.example.newsmanagerproject.MyArticleModel;
 import com.example.newsmanagerproject.R;
 import com.example.newsmanagerproject.database.ArticleDB;
 import com.example.newsmanagerproject.database.ArticleDatabaseHelper;
@@ -37,9 +40,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private NewsAdapter myAdapter;
     private LoadArticlesTask loadArticlesTask;
     private FloatingActionButton loginButon;
-    private List<Article> listRes=null;
+    private MyArticleModel model;
+    private List<Article> listRes = null;
 
-    ArticleDatabaseHelper dbHelper=new ArticleDatabaseHelper(getBaseContext());
+    ArticleDatabaseHelper dbHelper = new ArticleDatabaseHelper(getBaseContext());
 
     private ArticleDB dbArticle;
     //Variables for sideBar
@@ -53,8 +57,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //Create FragmentManager
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         //db conection
-        dbArticle= new ArticleDB(this);
+        dbArticle = new ArticleDB(this);
 
         //SideBar
         Toolbar toolbar = findViewById(R.id.toolbarPerfect);
@@ -71,20 +78,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment, new AllFragment()).commit();
-            navigationView.setCheckedItem(R.id.category_all);
-        }
-
         if (!isLogged) {
             Log.i("Tag", "No está logueado");
         }
+
+        if (savedInstanceState == null) {
+            transaction.add(R.id.fragment, new AllFragment()).commit();
+            transaction.addToBackStack(null);
+            navigationView.setCheckedItem(R.id.category_all);
+        }
+
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        Log.i("onNaviSelec","Antes");
-        Fragment f= null;
+        Log.i("onNaviSelec", "Antes");
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        Fragment f = new Fragment();
         switch (item.getItemId()) {
             case R.id.nav_home:
                 Intent intentHome = new Intent(this, MainActivity.class);
@@ -95,29 +105,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(intentAddArticle);
                 break;
             case R.id.category_national:
-                f=new NationalFragment();
+                f = new NationalFragment();
                 break;
             case R.id.category_economy:
-                f=new EconomyFragment();
+                f = new EconomyFragment();
                 break;
             case R.id.category_sports:
-                f=new SportsFragment();
+                f = new SportsFragment();
                 break;
             case R.id.category_technology:
-                f=new TechnologyFragment();
+                f = new TechnologyFragment();
                 break;
             case R.id.category_all:
-                f=new AllFragment();
+                f = new AllFragment();
                 break;
             case R.id.nav_logout:
                 break;
         }
-        if(f!=null){
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment,f).commit();
-            item.setChecked(true);
+        if (f != null) {
+            transaction.replace(R.id.fragment, f);
+            transaction.addToBackStack(null);
+            transaction.commit();
             drawerLayout.closeDrawer(GravityCompat.START);
         }
-        Log.i("onNaviSelec","Despues");
         //To select item when is triggered
         return false;
 
@@ -126,14 +136,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     //This method allow manage the actions whenever any menu item is selected
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Log.i("onOptionsItemSelected","Antes");
+
         switch (item.getItemId()) {
             case android.R.id.home:
                 // Abrir menu
-                drawerLayout.openDrawer(GravityCompat.START);
+                finish();
                 return true;
         }
-        Log.i("onOptionsItemSelected","Después");
         return super.onOptionsItemSelected(item);
     }
 
@@ -148,13 +157,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onBackPressed() {
-        Log.i("onBackPressed","Antes");
+        Log.i("onBackPressed", "Antes");
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
         }
-        Log.i("onBackPressed","Después");
+        Log.i("onBackPressed", "Después");
     }
 
 }

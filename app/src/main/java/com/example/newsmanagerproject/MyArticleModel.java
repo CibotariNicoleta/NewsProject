@@ -13,12 +13,15 @@ import java.util.concurrent.ExecutionException;
 
 public class MyArticleModel extends ViewModel {
     private MutableLiveData<List<Article>> articles;
-    private Observer observer; //Ponerlo en la UI
 
     public LiveData<List<Article>> getArticles() {
         if (articles == null) {
             articles = new MutableLiveData<>();
             articles.setValue(loadArticles());
+        } else if (articles.getValue().size() > 0) {
+            List<Article> res = articles.getValue();
+            res.addAll(loadArticles());
+            articles.setValue(res);
         }
         return articles;
     }
