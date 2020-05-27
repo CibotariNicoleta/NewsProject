@@ -137,7 +137,7 @@ public class NationalFragment extends Fragment {
 
             //Look for more data
             List<Article> getList=new ArrayList<Article>();
-            LoadArticlesTask loadArticlesTask = new LoadArticlesTask(getContext());
+            LoadArticlesTask loadArticlesTask = new LoadArticlesTask();
             try {
                 //add in db
                 getList = loadArticlesTask.execute().get();

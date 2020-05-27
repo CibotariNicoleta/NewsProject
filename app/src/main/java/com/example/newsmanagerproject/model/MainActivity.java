@@ -78,6 +78,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
+        Log.i("Tag", "No está logueado");
         if (!isLogged) {
             Log.i("Tag", "No está logueado");
         }

@@ -28,16 +28,10 @@ public class LoadArticlesTask extends AsyncTask<Void, Void, List<Article>> {
     private static int offset = 0;
     Context context;
 
-    public LoadArticlesTask() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
-
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public List<Article> doInBackground(Void... voids) {
         List<Article> res = new ArrayList<Article>();
-        //added here
         Properties p = new Properties();
         p.put(ATTR_SERVICE_URL, "https://sanger.dia.fi.upm.es/pmd-task/");
         p.put(ATTR_REQUIRE_SELF_CERT, "TRUE");
@@ -64,32 +58,16 @@ public class LoadArticlesTask extends AsyncTask<Void, Void, List<Article>> {
                 // obtain 6 articles from offset 0
                 Log.d("El usuario es ->", ModelManager.getIdUser());
                 Log.d("Con la clave de API->", ModelManager.getLoggedApiKey());
-                //System.out.println("El usuario es ->"+ ModelManager.getIdUser() +"Con la clave de API->" +ModelManager.getLoggedApiKey());//BORRAR
-
-                //Querying database for the Article_DB´s count
-                // to recude the number of calls to server
-                //If our DB index is bigger than offset
-                // the app only load the articles in DB
-                int indexDB = ArticleDB.getLength();
-                if (offset < indexDB) {
-                    res = ArticleDB.loadArticles();
-                    offset=offset+res.size();
-                }
-                //If the offset is bigger. Then we need to load more
-                // articles and save them in DB
-                else {
-                    res = ModelManager.getArticles(10, offset);
-                    if(res.size()!=0){
-                        offset = offset + 10;
-                        addInDb(res);
-                    }
+                res = ModelManager.getArticles(10, offset);
+                int index = res.size();
+                if (index != 0) {
+                    offset = offset + index;
+//                    addInDb(res);
                 }
             } catch (ServerComnmunicationError e) {
                 Log.e(TAG, e.getMessage());
             }
         }
-        // added here
-        //Toast.makeText(context, res.toString(), Toast.LENGTH_SHORT).show(); // res is null
         return res;
     }
 

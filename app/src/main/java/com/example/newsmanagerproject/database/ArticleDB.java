@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import android.widget.SimpleCursorAdapter;
 
+import com.example.newsmanagerproject.LoadArticlesTask;
 import com.example.newsmanagerproject.model.Article;
 import com.example.newsmanagerproject.model.Logger;
 import com.example.newsmanagerproject.network.errors.ServerComnmunicationError;
@@ -18,74 +19,76 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class ArticleDB {
 
     private static ArticleDatabaseHelper helper;
-    private static int offset=0;
+    private static int offset = 0;
 
-    public ArticleDB(Context c){
+    public ArticleDB(Context c) {
         helper = new ArticleDatabaseHelper(c);
     }
-    public static void saveNewMessage(Article m){
+
+    public static void saveNewMessage(Article m) {
 
 
         ContentValues values = new ContentValues();
         SQLiteDatabase dbd = helper.getReadableDatabase();
         Cursor cursor = dbd.query(DatabaseConstants.DB_TABLE_ARTICLE_NAME,
-                null,null,null,null,
-                null,DatabaseConstants.DB_TABLE_FIELD_ARTICLE_LASTUPDATE);
+                null, null, null, null,
+                null, DatabaseConstants.DB_TABLE_FIELD_ARTICLE_LASTUPDATE);
         cursor.moveToFirst();
-        int id_test=0;
-        while (!cursor.isAfterLast())
-        {
+        int id_test = 0;
+        while (!cursor.isAfterLast()) {
             int id = cursor.getInt(0);
-            if((id == m.getId()) && (cursor.getInt(1) == m.getIdUser()) )
+            if ((id == m.getId()) && (cursor.getInt(1) == m.getIdUser()))
                 id_test = 1;
 
             cursor.moveToNext();
         }
-        if(id_test == 0){
-            Logger.log (Logger.INFO, "uuu" + " --------- >>>>>>>(Article) retrieved");
+        if (id_test == 0) {
+            Logger.log(Logger.INFO, "uuu" + " --------- >>>>>>>(Article) retrieved");
             SQLiteDatabase db = helper.getWritableDatabase();
-        values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_ID, m.getId());
-        values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_IDUSER,m.getIdUser());
-        values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_TITLE,m.getTitleText());
-        values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_CATEGORY,m.getCategory());
-        values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_ABSTRACT,m.getAbstractText());
-        values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_BODY,m.getBodyText());
-        values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_SUBTITLE,m.getSubtitleText());
+            values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_ID, m.getId());
+            values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_IDUSER, m.getIdUser());
+            values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_TITLE, m.getTitleText());
+            values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_CATEGORY, m.getCategory());
+            values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_ABSTRACT, m.getAbstractText());
+            values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_BODY, m.getBodyText());
+            values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_SUBTITLE, m.getSubtitleText());
 
-        try {
-            values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_IMAGEDESCRIPTION,m.getImage().getDescription());
-        } catch (ServerComnmunicationError serverComnmunicationError) {
-            serverComnmunicationError.printStackTrace();
+            try {
+                values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_IMAGEDESCRIPTION, m.getImage().getDescription());
+            } catch (ServerComnmunicationError serverComnmunicationError) {
+                serverComnmunicationError.printStackTrace();
+            }
+
+            values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_THUMBNAIL, m.getThumbnail());
+            values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_LASTUPDATE, m.getLastUpdate().getTime());
+            try {
+                values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_IMAGEDATA, m.getImage().getIdArticle());
+            } catch (ServerComnmunicationError serverComnmunicationError) {
+                serverComnmunicationError.printStackTrace();
+            }
+            long insertId = db.insert(DatabaseConstants.DB_TABLE_ARTICLE_NAME, null, values);
+
+            Logger.log(Logger.INFO, "saveeee" + " --------- >>>>>>>(Article) retrieved");
         }
-
-        values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_THUMBNAIL,m.getThumbnail());
-        values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_LASTUPDATE,m.getLastUpdate().getTime());
-        try {
-            values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_IMAGEDATA,m.getImage().getIdArticle());
-        } catch (ServerComnmunicationError serverComnmunicationError) {
-            serverComnmunicationError.printStackTrace();
-        }
-        long insertId = db.insert(DatabaseConstants.DB_TABLE_ARTICLE_NAME, null, values);
-
-        Logger.log (Logger.INFO, "saveeee" + " --------- >>>>>>>(Article) retrieved"); }
 
     }
 
 
-    public static List<Article> loadAllMessages(){
+    public static List<Article> loadAllMessages() {
         ArrayList<Article> result = new ArrayList<>();
 
         SQLiteDatabase db = helper.getReadableDatabase();
         Cursor cursor = db.query(DatabaseConstants.DB_TABLE_ARTICLE_NAME,
-                null,null,null,null,
-                null,DatabaseConstants.DB_TABLE_FIELD_ARTICLE_LASTUPDATE);
+                null, null, null, null,
+                null, DatabaseConstants.DB_TABLE_FIELD_ARTICLE_LASTUPDATE);
 
         cursor.moveToFirst();
-        while (!cursor.isAfterLast()){
+        while (!cursor.isAfterLast()) {
             Article article = new Article();
             SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy");
             int id = cursor.getInt(0);
@@ -125,26 +128,27 @@ public class ArticleDB {
             article.setImageData(imageData);
             result.add(article);
             cursor.moveToNext();
-            Logger.log (Logger.INFO, id + " --------- >>>>>>>(Article) retrieved");
+            Logger.log(Logger.INFO, id + " --------- >>>>>>>(Article) retrieved");
 
         }
 
         return result;
     }
-    public static int getLength(){
+
+    public static int getLength() {
         int res;
         SQLiteDatabase dbd = helper.getReadableDatabase();
-        res=(int) DatabaseUtils.queryNumEntries(dbd,"Article_DB");
+        res = (int) DatabaseUtils.queryNumEntries(dbd, "Article_DB");
         return res;
     }
 
-    public static List<Article> loadArticles(){
+    public static List<Article> loadArticles() {
         SQLiteDatabase db = helper.getReadableDatabase();
-        List<Article> resList= new ArrayList<Article>();
-        Cursor cursor= db.rawQuery("SELECT * FROM Article_DB LIMIT 10 OFFSET "+ offset +";",null);
+        List<Article> resList = new ArrayList<Article>();
+        Cursor cursor = db.rawQuery("SELECT * FROM Article_DB LIMIT 10 OFFSET " + offset + ";", null);
         cursor.moveToFirst();
-        while(!cursor.isAfterLast()){
-            Article article=new Article();
+        while (!cursor.isAfterLast()) {
+            Article article = new Article();
             int id = cursor.getInt(0);
             int idUser = cursor.getInt(1);
             String title = cursor.getString(2);
@@ -175,11 +179,43 @@ public class ArticleDB {
             resList.add(article);
             cursor.moveToNext();
         }
-        offset=offset+10;
+        offset = offset + cursor.getCount();
         return resList;
     }
-    public static void resetOffset(){
-        offset=0;
+
+    public static void resetOffset() {
+        offset = 0;
+    }
+
+    /*
+     *  getArticles(): This method call an AsynTask method to get
+     *               articles from a server and if there are not in
+     *               the DB, then it will save within SqliteDB.
+     *               In case that DB has enough articles to load
+     *               it only returns the articles from DB.
+     * */
+    public static List<Article> getArticles() {
+        List<Article> res = new ArrayList<>();
+        if (LoadArticlesTask.getOffset() < getLength()) {
+            res = loadArticles();
+        } else {
+            LoadArticlesTask loadArticlesTask = new LoadArticlesTask();
+            try {
+                res = loadArticlesTask.execute().get();
+                int index = res.size();
+                if (index > 0) {
+                    offset = offset + index;
+                    for (Article r : res)
+                        saveNewMessage(r);
+                }
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return res;
     }
 }
 

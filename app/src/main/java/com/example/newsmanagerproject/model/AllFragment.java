@@ -16,9 +16,15 @@ import android.widget.ListView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelStoreOwner;
 
 import com.example.newsmanagerproject.LoadArticlesTask;
 import com.example.newsmanagerproject.Login;
+import com.example.newsmanagerproject.MyArticleModel;
 import com.example.newsmanagerproject.R;
 import com.example.newsmanagerproject.database.ArticleDB;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -34,11 +40,21 @@ public class AllFragment extends Fragment {
 
     private ArrayList<Article> arrayArticle;
     private List<Article> listRes;
+    private MyArticleModel model;
+    private Observer observer;
     public Handler mhandler;
+
     public View footerView;
     public ListView recyclerView;
     public NewsAdapter myAdapter;
     public boolean isLoading = false;
+
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        model = new ViewModelProvider(this).get(MyArticleModel.class);
+    }
 
     @Nullable
     @Override
@@ -46,16 +62,18 @@ public class AllFragment extends Fragment {
 
         View root = inflater.inflate(R.layout.fragment_all, container, false);
 
+        //Load articles from Database
+        ArticleDB.resetOffset();
         //Call loadArticleTask service
-        LoadArticlesTask loadArticlesTask = new LoadArticlesTask(getContext());
-        try {
-            //add in db
-            listRes = loadArticlesTask.execute().get();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        listRes = new ArrayList<>();
+        //Test viewModel
+
+        model.getArticles().observe(getViewLifecycleOwner(), new Observer<List<Article>>() {
+            @Override
+            public void onChanged(List<Article> articles) {
+                myAdapter.notifyDataSetChanged();
+            }
+        });
 
         // This part will show a list of articles
         recyclerView = root.findViewById(R.id.list_all);
@@ -67,7 +85,7 @@ public class AllFragment extends Fragment {
         //Create handler
         mhandler = new MyHandler();
 
-        myAdapter = new NewsAdapter(Objects.requireNonNull(getContext()), listRes);
+        myAdapter = new NewsAdapter(Objects.requireNonNull(getContext()), model.getArticles().getValue());
         recyclerView.setAdapter(myAdapter);
 
         //This let us set every item clickable LUEGO DESCOMENTARTodo
@@ -81,8 +99,8 @@ public class AllFragment extends Fragment {
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if (view.getLastVisiblePosition()==totalItemCount-1 && recyclerView.getCount()>=10 && !isLoading){
-                    isLoading=true;
+                if (view.getLastVisiblePosition() == totalItemCount - 1 && recyclerView.getCount() >= 10 && !isLoading) {
+                    isLoading = true;
                     Thread thread = new ThreadGetMoreArticles();
                     thread.start();
                 }
@@ -132,17 +150,10 @@ public class AllFragment extends Fragment {
             //Add footer view
             mhandler.sendEmptyMessage(0);
 
+
             //Look for more data
-            List<Article> getList=new ArrayList<Article>();
-            LoadArticlesTask loadArticlesTask = new LoadArticlesTask(getContext());
-            try {
-                //add in db
-                getList = loadArticlesTask.execute().get();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            List<Article> getList = new ArrayList<Article>();
+
             try {
                 Thread.sleep(3000);
             } catch (InterruptedException e) {
