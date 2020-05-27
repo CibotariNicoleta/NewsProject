@@ -142,6 +142,12 @@ public class ArticleDB {
         return res;
     }
 
+
+    /**
+     * loadArticles(): This method returns a maximum
+     * of 10 items from the database starting
+     * from the index indicated by "offset"
+     **/
     public static List<Article> loadArticles() {
         SQLiteDatabase db = helper.getReadableDatabase();
         List<Article> resList = new ArrayList<Article>();
@@ -183,31 +189,31 @@ public class ArticleDB {
         return resList;
     }
 
+    /**
+     * resetOffset():  This method reset the offset count
+     **/
     public static void resetOffset() {
         offset = 0;
     }
 
-    /*
-     *  getArticles(): This method call an AsynTask method to get
-     *               articles from a server and if there are not in
-     *               the DB, then it will save within SqliteDB.
-     *               In case that DB has enough articles to load
-     *               it only returns the articles from DB.
-     * */
+    /**
+     * getArticles(): This method call an AsynTask method to get
+     * articles from a server and if there are not in
+     * the DB, then it will save within SqliteDB.
+     * In case that DB has enough articles to load
+     * it only returns the articles from DB.
+     */
     public static List<Article> getArticles() {
         List<Article> res = new ArrayList<>();
         if (LoadArticlesTask.getOffset() < getLength()) {
             res = loadArticles();
         } else {
+            //Call loadArticleTask service to get articles from server
             LoadArticlesTask loadArticlesTask = new LoadArticlesTask();
             try {
                 res = loadArticlesTask.execute().get();
-                int index = res.size();
-                if (index > 0) {
-                    offset = offset + index;
                     for (Article r : res)
                         saveNewMessage(r);
-                }
             } catch (ExecutionException e) {
                 e.printStackTrace();
             } catch (InterruptedException e) {
