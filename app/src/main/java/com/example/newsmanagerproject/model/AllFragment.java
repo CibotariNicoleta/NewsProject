@@ -50,12 +50,6 @@ public class AllFragment extends Fragment {
     public boolean isLoading = false;
 
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        model = new ViewModelProvider(this).get(MyArticleModel.class);
-    }
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -65,15 +59,7 @@ public class AllFragment extends Fragment {
         //Load articles from Database
         ArticleDB.resetOffset();
         //Call loadArticleTask service
-        listRes = new ArrayList<>();
-        //Test viewModel
-
-        model.getArticles().observe(getViewLifecycleOwner(), new Observer<List<Article>>() {
-            @Override
-            public void onChanged(List<Article> articles) {
-                myAdapter.notifyDataSetChanged();
-            }
-        });
+        listRes = new ArrayList<>(ArticleDB.getArticles());
 
         // This part will show a list of articles
         recyclerView = root.findViewById(R.id.list_all);
@@ -85,7 +71,7 @@ public class AllFragment extends Fragment {
         //Create handler
         mhandler = new MyHandler();
 
-        myAdapter = new NewsAdapter(Objects.requireNonNull(getContext()), model.getArticles().getValue());
+        myAdapter = new NewsAdapter(Objects.requireNonNull(getContext()),listRes);
         recyclerView.setAdapter(myAdapter);
 
         //This let us set every item clickable LUEGO DESCOMENTARTodo
@@ -109,7 +95,6 @@ public class AllFragment extends Fragment {
 
 
         FloatingActionButton loginButon = root.findViewById(R.id.loginButton);
-        Log.i("LoginButton", "Antes del loginButton");
         loginButon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -152,7 +137,7 @@ public class AllFragment extends Fragment {
 
 
             //Look for more data
-            List<Article> getList = new ArrayList<Article>();
+            List<Article> getList = new ArrayList<Article>(ArticleDB.getArticles());
 
             try {
                 Thread.sleep(3000);

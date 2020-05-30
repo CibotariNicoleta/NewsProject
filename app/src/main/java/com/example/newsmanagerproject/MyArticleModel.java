@@ -11,6 +11,7 @@ import com.example.newsmanagerproject.model.Article;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
 public class MyArticleModel extends ViewModel {
@@ -49,7 +50,7 @@ public class MyArticleModel extends ViewModel {
      */
     public void getMoreArticles() {
         List<Article> aux = new ArrayList<Article>(ArticleDB.getArticles());
-        List<Article> res = new ArrayList<>(articles.getValue());
+        List<Article> res = new ArrayList<>(Objects.requireNonNull(articles.getValue()));
         res.addAll(aux);
         articles.postValue(res);
 
