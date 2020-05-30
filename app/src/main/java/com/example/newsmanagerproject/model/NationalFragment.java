@@ -75,7 +75,7 @@ public class NationalFragment extends Fragment {
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if (view.getLastVisiblePosition()==totalItemCount-1 && recyclerView.getCount()>=10 && !isLoading){
+                if (view.getLastVisiblePosition()==totalItemCount-1 && !isLoading){
                     isLoading=true;
                     Thread thread = new ThreadGetMoreArticles();
                     thread.start();
@@ -136,17 +136,9 @@ public class NationalFragment extends Fragment {
             mhandler.sendEmptyMessage(0);
 
             //Look for more data
-            List<Article> getList=new ArrayList<Article>();
-            LoadArticlesTask loadArticlesTask = new LoadArticlesTask();
-            try {
-                //add in db
-                getList = loadArticlesTask.execute().get();
+            List<Article> getList=new ArrayList<Article>(ArticleDB.getArticles());
                 getList=getListFilter(getList);
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+
             try {
                 Thread.sleep(3000);
             } catch (InterruptedException e) {

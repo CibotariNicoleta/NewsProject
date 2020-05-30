@@ -103,7 +103,6 @@ public class AllFragment extends Fragment {
                 startActivity(intent);
             }
         });
-
         return root;
 
     }
@@ -118,7 +117,6 @@ public class AllFragment extends Fragment {
                 case 1:
                     //Update data adapater and UI
                     myAdapter.addArticlesList((List<Article>) msg.obj);
-
                     //To remove footer View
                     recyclerView.removeFooterView(footerView);
                     isLoading = false;
@@ -134,13 +132,10 @@ public class AllFragment extends Fragment {
         public void run() {
             //Add footer view
             mhandler.sendEmptyMessage(0);
-
-
             //Look for more data
             List<Article> getList = new ArrayList<Article>(ArticleDB.getArticles());
-
             try {
-                Thread.sleep(3000);
+                Thread.sleep(2000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
