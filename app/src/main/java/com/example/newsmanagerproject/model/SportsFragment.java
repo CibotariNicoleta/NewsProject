@@ -53,17 +53,6 @@ public class SportsFragment extends Fragment {
         //Create handler
         mhandler = new MyHandler();
 
-        loginButon = (FloatingActionButton) root.findViewById(R.id.loginButton);
-        Log.i("LoginButton","Antes del loginButton");
-        loginButon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.i("LoginButton","Antes de llamar al login");
-                Intent intent = new Intent(getContext(), Login.class);
-                startActivity(intent);
-            }
-        });
-
         return root;
     }
 

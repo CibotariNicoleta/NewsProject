@@ -88,6 +88,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             navigationView.setCheckedItem(R.id.category_all);
         }
 
+        FloatingActionButton loginButon = findViewById(R.id.loginButton);
+        loginButon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i("LoginButton", "Antes de llamar al login");
+                Intent intent = new Intent(getBaseContext(), Login.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -163,14 +172,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return super.onOptionsItemSelected(item);
     }
 
-    //Method that permit access to the NewArticle class
-    public void goNewsArticle(View view, int position) {
-        Intent intentNewsArticle = new Intent(this, NewsArticle.class);
-
-        //To send article to NewsArticle
-        intentNewsArticle.putExtra("Article", listRes.get(position));
-        startActivity(intentNewsArticle);
-    }
 
     @Override
     public void onBackPressed() {

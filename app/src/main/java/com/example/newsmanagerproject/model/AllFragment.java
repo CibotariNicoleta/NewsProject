@@ -93,16 +93,6 @@ public class AllFragment extends Fragment {
             }
         });
 
-
-        FloatingActionButton loginButon = root.findViewById(R.id.loginButton);
-        loginButon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.i("LoginButton", "Antes de llamar al login");
-                Intent intent = new Intent(getContext(), Login.class);
-                startActivity(intent);
-            }
-        });
         return root;
 
     }
