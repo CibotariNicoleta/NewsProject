@@ -194,4 +194,13 @@ public class NewsAdapter extends ArrayAdapter<Article> {
             }
         });
     }
+
+
+    //This method add items to the arrayList
+    public void addArticlesList(List<Article> listArticles) {
+        articles.addAll(listArticles);
+        //To refresh the list of articles
+        this.notifyDataSetChanged();
+    }
+
 }
