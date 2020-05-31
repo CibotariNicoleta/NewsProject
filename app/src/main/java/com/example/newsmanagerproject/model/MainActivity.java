@@ -1,6 +1,7 @@
 package com.example.newsmanagerproject.model;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -30,6 +31,7 @@ import com.example.newsmanagerproject.database.ArticleDB;
 import com.example.newsmanagerproject.database.ArticleDatabaseHelper;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     DrawerLayout drawerLayout;
     NavigationView navigationView;
 
-    public static boolean isLogged = false;
+   // public static boolean isLogged = false;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -78,10 +80,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
-        Log.i("Tag", "No está logueado");
-        if (!isLogged) {
-            Log.i("Tag", "No está logueado");
-        }
 
         if (savedInstanceState == null) {
             transaction.add(R.id.fragment, new AllFragment()).commit();
@@ -102,8 +100,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(intentHome);
                 break;
             case R.id.nav_create:
+                if(Login.isLogged){
                 Intent intentAddArticle = new Intent(this, creatArticle.class);
-                startActivity(intentAddArticle);
+                startActivity(intentAddArticle); }
                 break;
             case R.id.category_national:
                 f = new NationalFragment();
@@ -121,6 +120,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 f = new AllFragment();
                 break;
             case R.id.nav_logout:
+                Login.isLogged = false;
+
+                MenuItem logout = (MenuItem) findViewById(R.id.nav_logout);
+                item.setVisible(false);
+
+                MenuItem create = (MenuItem) findViewById(R.id.nav_create);
+                item.setVisible(false);
+
+                //loginButon.setVisibility(View.VISIBLE);
+                NewsAdapter.deleteButton.setVisibility(View.GONE);
+                NewsAdapter.modifyButton.setVisibility(View.GONE);
+
+
+                /// WE HAVE TO IMPLEMENT LOGOUT FUNCTION
                 break;
         }
         if (f != null) {

@@ -28,22 +28,18 @@ import com.example.newsmanagerproject.network.errors.ServerComnmunicationError;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.Properties;
-import java.util.concurrent.ExecutionException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
-import static com.example.newsmanagerproject.network.RESTConnection.ATTR_REQUIRE_SELF_CERT;
-import static com.example.newsmanagerproject.network.RESTConnection.ATTR_SERVICE_URL;
-
-public class creatArticle extends AppCompatActivity {
+public class creatArticle extends AppCompatActivity  {
     private Spinner spinner;
     private FloatingActionButton saveButton, cancelButton;
     private EditText text_title, text_abstract, text_subtitle, text_body;
     private String categoryST;
     private Article articleCreated;
     private Dialog myDialog;
-    private String titleST, abstractST, subtitleST, bodyST;
+    private Date date;
+    private String titleST,abstractST,subtitleST,bodyST;
     private TextView category_text, title_text, abstract_text, subtitle_text, body_text;
 
     @Override
@@ -75,9 +71,48 @@ public class creatArticle extends AppCompatActivity {
         // Apply the adapter to the spinner
         spinner.setAdapter(adapter);
 
+        text_title=findViewById(R.id.text_create_title);
+        text_abstract=findViewById(R.id.text_create_abstract);
+        text_subtitle=findViewById(R.id.text_create_subtitle);
+        text_body=findViewById(R.id.text_create_body);
+
+
+        //get current time
+        SimpleDateFormat formatter = new SimpleDateFormat(
+                "yyyy-MM-dd HH:mm:ss");
+        date = new Date(System.currentTimeMillis());
+        System.out.println("current time is: " + date);
+
+       //update article
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            //String jsonArticle = extras.getString("Article");
+            Article article = (Article) extras.getSerializable("Article");
+
+                //  Article article = extras.getParcelable("Article");
+                  System.out.println("art" + article.getBodyText());
+                  text_title.setText(article.getTitleText());
+                  text_abstract.setText(article.getAbstractText());
+                  text_subtitle.setText(article.getSubtitleText());
+                  text_body.setText(article.getBodyText());
+
+            //The key argument here must match that used in the other activity
+        }
+
+
+        Article ex = (Article) getIntent().getSerializableExtra("Article");
+        if(ex != null){
+            articleCreated = ex;
+        }
+
         //Get all data
-        text_title = findViewById(R.id.text_create_title);
-        titleST = text_title.getText().toString();
+     /*   try {
+            ModelManager.saveArticle(ex);
+        } catch (ServerComnmunicationError serverComnmunicationError) {
+            serverComnmunicationError.printStackTrace();
+        }*/
+
+        titleST=text_title.getText().toString();
         text_title.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -95,8 +130,8 @@ public class creatArticle extends AppCompatActivity {
             }
         });
 
-        text_abstract = findViewById(R.id.text_create_abstract);
-        abstractST = text_abstract.getText().toString();
+
+        abstractST=text_abstract.getText().toString();
         text_abstract.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -114,8 +149,8 @@ public class creatArticle extends AppCompatActivity {
             }
         });
 
-        text_subtitle = findViewById(R.id.text_create_subtitle);
-        subtitleST = text_subtitle.getText().toString();
+
+        subtitleST=text_subtitle.getText().toString();
         text_subtitle.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -133,8 +168,8 @@ public class creatArticle extends AppCompatActivity {
             }
         });
 
-        text_body = findViewById(R.id.text_create_body);
-        bodyST = text_body.getText().toString();
+
+        bodyST=text_body.getText().toString();
         text_body.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -175,21 +210,24 @@ public class creatArticle extends AppCompatActivity {
                 }, 1000);
             }
         });
-    }
 
-    private void goSave(View v) {
-        String user = "12";
-        if (isValidated()) {
-            articleCreated = new Article(categoryST, titleST, abstractST, bodyST, subtitleST, user);
-            articleCreated.id=1;
+
+        //here we get value
+
+    }
+    private void goSave(View v){
+        String user="12";
+        if(isValidated()){
+            articleCreated=new Article(categoryST,titleST,abstractST,bodyST,subtitleST,user);
+            articleCreated.setLastUpdate(date);
             ShowPopUp(v);
 //            Intent intentShow= new Intent(getApplicationContext(),PopActivity.class);
 //            //To send Article to PopUp Class
 //            intentShow.putExtra("ArticleCreated", articleCreated);
 //            startActivity(intentShow);
-
-        } else {
-            Snackbar.make(v, "Please, complete all the fields", Snackbar.LENGTH_LONG).show();
+        }
+        else{
+            Snackbar.make(v,"Please, complete all the fields",Snackbar.LENGTH_LONG).show();
         }
     }
 

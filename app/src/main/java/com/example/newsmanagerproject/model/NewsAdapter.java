@@ -1,11 +1,14 @@
 package com.example.newsmanagerproject.model;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Movie;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
@@ -14,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -23,30 +27,37 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 
+import com.example.newsmanagerproject.Login;
 import com.example.newsmanagerproject.R;
+import com.example.newsmanagerproject.network.ModelManager;
 import com.example.newsmanagerproject.network.errors.ServerComnmunicationError;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.newsmanagerproject.model.MainActivity.isLogged;
 
 public class NewsAdapter extends ArrayAdapter<Article> {
 
 
     private CardView myCard;
+    private Dialog dialog;
     private Context mContext;
     private List<Article> articles = new ArrayList<>();
     private FrameLayout frameLayout;
+    public static FloatingActionButton deleteButton;
+    public static FloatingActionButton modifyButton;
 
     public NewsAdapter(@NonNull Context context, List<Article> list) {
         super(context, 0, list);
         this.mContext = context;
         articles = list;
+        dialog = new Dialog(mContext);
     }
+
 
     @SuppressLint("RestrictedApi")
     @NonNull
@@ -58,8 +69,19 @@ public class NewsAdapter extends ArrayAdapter<Article> {
 
         myCard = listItem.findViewById(R.id.myCard);
 
-        FloatingActionButton deleteButton = listItem.findViewById(R.id.deleteButton);
-        FloatingActionButton modifyButton = listItem.findViewById(R.id.modifyButton);
+
+
+
+        deleteButton= listItem.findViewById(R.id.deleteButton);
+        modifyButton= listItem.findViewById(R.id.modifyButton);
+
+       if(!Login.isLogged){
+            deleteButton.setVisibility(View.GONE);
+            modifyButton.setVisibility(View.GONE);
+        }else{
+           deleteButton.setVisibility(View.VISIBLE);
+           modifyButton.setVisibility(View.VISIBLE);
+       }
 
         final Article article = articles.get(position);
 
@@ -88,20 +110,35 @@ public class NewsAdapter extends ArrayAdapter<Article> {
         TextView Abstract = (TextView) listItem.findViewById(R.id.newsAbstract);
         Abstract.setText(article.getAbstractText());
 
+        SimpleDateFormat formatter = new SimpleDateFormat(
+                "yyyy-MM-dd HH:mm:ss");
+        EditText date = (EditText) listItem.findViewById(R.id.date_and_time);
+        date.setText(formatter.format(article.getLastUpdate()));
+
+
         //onClick method
 
 
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Snackbar.make(v, "DeleteButton", Snackbar.LENGTH_SHORT);
+                ShowPopUp(v, article);
+               // Intent intent = new Intent(mContext, PopActivityDelete.class);
+                //mContext.startActivity(intent);
+                //Snackbar.make(v,"DeleteButton",Snackbar.LENGTH_SHORT);
             }
         });
 
         modifyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Snackbar.make(v, "ModifyButton", Snackbar.LENGTH_SHORT);
+                Intent intent = new Intent(mContext, creatArticle.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("Article", article);
+                intent.putExtras(bundle);
+                mContext.startActivity(intent);
+
+                Snackbar.make(v,"ModifyButton",Snackbar.LENGTH_SHORT);
             }
         });
 
@@ -116,10 +153,45 @@ public class NewsAdapter extends ArrayAdapter<Article> {
         return listItem;
     }
 
-    //This method add items to the arrayList
-    public void addArticlesList(List<Article> listArticles) {
-        articles.addAll(listArticles);
-        //To refresh the list of articles
-        this.notifyDataSetChanged();
+    private boolean isLogged(){
+        return Login.isLogged;
+    }
+
+    private void ShowPopUp(View v, Article article){
+
+        dialog.setContentView(R.layout.activity_pop_delete);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.show();
+        FloatingActionButton close = dialog.findViewById(R.id.closeButton) ;
+        FloatingActionButton accept = dialog.findViewById(R.id.acceptButton);
+
+        close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, MainActivity.class);
+                mContext.startActivity(intent);
+            }
+        });
+
+        accept.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Thread thread = new Thread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        try  {
+                            RetrieveArticleTask delete = new RetrieveArticleTask(article.getId()) ;
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+
+                thread.start();
+
+                Snackbar.make(v,"Deleted with succes!",Snackbar.LENGTH_LONG).setActionTextColor(Color.MAGENTA).show();
+            }
+        });
     }
 }
