@@ -14,17 +14,17 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
-public class MyArticleModel extends ViewModel {
-    private MutableLiveData<List<Article>> articles;
+public class MyArticleModel {
+    private static List<Article> articles;
 
     /**
      * getArticles(): This method initialize list articles data to
      * visualize in the view components
      */
 
-    public LiveData<List<Article>> getArticles() {
+    public List<Article> getArticles() {
         if (articles == null) {
-            articles = new MutableLiveData<>();
+            articles = new ArrayList<Article>();
             loadArticles();
         }
         return articles;
@@ -41,7 +41,7 @@ public class MyArticleModel extends ViewModel {
         while (iterator.hasNext()) {
             res.add((Article) iterator.next());
         }
-        articles.setValue(res);
+        articles.addAll(res);
     }
 
     /**
@@ -50,9 +50,9 @@ public class MyArticleModel extends ViewModel {
      */
     public void getMoreArticles() {
         List<Article> aux = new ArrayList<Article>(ArticleDB.getArticles());
-        List<Article> res = new ArrayList<>(Objects.requireNonNull(articles.getValue()));
+        List<Article> res = new ArrayList<>(Objects.requireNonNull(articles));
         res.addAll(aux);
-        articles.postValue(res);
+        articles.addAll(res);
 
     }
 }

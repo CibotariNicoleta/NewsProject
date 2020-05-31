@@ -66,6 +66,8 @@ public class Login extends AppCompatActivity {
                 if (userName.getText().toString().equals("DEV_TEAM_09") &&
                         pwd.getText().toString().equals("65424")) {
 
+                    MainActivity.loginButton.setVisibility(View.INVISIBLE);
+
                     Intent intentGoLogging = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(intentGoLogging);
                     shared.secondtime();
@@ -79,81 +81,8 @@ public class Login extends AppCompatActivity {
                     }
                 }
             }
-
         });
-
-
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        //loginPreferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
-        //loginPrefsEditor = loginPreferences.edit();
-      /*  ok = loginPreferences.getBoolean("saveLogin", false);
-        if (ok == true) {
-            userName.setText(loginPreferences.getString("username", ""));
-            pwd.setText(loginPreferences.getString("password", ""));
-            remember_me.setChecked(true);
-        }
-
-        login.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (v == login) {
-                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(userName.getWindowToken(), 0);
-
-                    if (remember_me.isChecked()) {
-                        loginPrefsEditor.putBoolean("saveLogin", true);
-                        loginPrefsEditor.putString("username", userName.getText().toString());
-                        loginPrefsEditor.putString("password", pwd.getText().toString());
-                        loginPrefsEditor.commit();
-
-                    } else {
-                        loginPrefsEditor.clear();
-                        loginPrefsEditor.commit();
-                    }
-
-                    doSomethingElse();
-
-                }
-            }
-        });
-    }
-
-    public void doSomethingElse() {
-        if (userName.getText().toString().equals("DEV_TEAM_09") &&
-                pwd.getText().toString().equals("65424")) {
-            Toast.makeText(getApplicationContext(), "Conecting...", Toast.LENGTH_SHORT).show();
-
-            Intent intentGoLogging = new Intent(getApplicationContext(), MainActivity.class);
-            //To send article to NewsArticle
-            startActivity(intentGoLogging);
-        } else {
-            Toast.makeText(getApplicationContext(), "Wrong" +
-                    "Credentials", Toast.LENGTH_SHORT).show();
-            counter--;
-            if (counter == 0) {
-                login.setEnabled(false);
-            }
-        }
-
-
-    }*/
 
 

@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -20,6 +21,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 
@@ -35,16 +37,18 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
 import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private ListView recyclerView;
     private NewsAdapter myAdapter;
     private LoadArticlesTask loadArticlesTask;
-    private FloatingActionButton loginButon;
     private Shared shared;
-    private List<Article> listRes=null;
+    private List<Article> listRes = null;
     private MyArticleModel model;
+
+    public static FloatingActionButton loginButton;
 
     ArticleDatabaseHelper dbHelper = new ArticleDatabaseHelper(getBaseContext());
 
@@ -53,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     DrawerLayout drawerLayout;
     NavigationView navigationView;
 
-   // public static boolean isLogged = false;
+    // public static boolean isLogged = false;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -88,15 +92,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             navigationView.setCheckedItem(R.id.category_all);
         }
 
-        FloatingActionButton loginButon = findViewById(R.id.loginButton);
-        loginButon.setOnClickListener(new View.OnClickListener() {
+        loginButton = findViewById(R.id.loginButton);
+        if(Shared.checkLogin){
+            loginButton.setVisibility(View.INVISIBLE);
+        }
+        loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i("LoginButton", "Antes de llamar al login");
                 Intent intent = new Intent(getBaseContext(), Login.class);
                 startActivity(intent);
             }
         });
+
+
     }
 
     @Override
@@ -110,9 +118,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(intentHome);
                 break;
             case R.id.nav_create:
-                if(Shared.checkLogin){
-                Intent intentAddArticle = new Intent(this, creatArticle.class);
-                startActivity(intentAddArticle); } else item.setVisible(false);
+                if (Shared.checkLogin) {
+                    Intent intentAddArticle = new Intent(this, creatArticle.class);
+                    startActivity(intentAddArticle);
+                } else item.setVisible(false);
                 break;
             case R.id.category_national:
                 f = new NationalFragment();
