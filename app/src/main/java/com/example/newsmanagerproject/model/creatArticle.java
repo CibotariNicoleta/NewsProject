@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.icu.text.IDNA;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
@@ -22,7 +23,10 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.newsmanagerproject.R;
+import com.example.newsmanagerproject.database.ArticleDB;
 import com.example.newsmanagerproject.network.ModelManager;
+import com.example.newsmanagerproject.network.SaveArticleTask;
+import com.example.newsmanagerproject.network.UpdateArticleTask;
 import com.example.newsmanagerproject.network.errors.ServerComnmunicationError;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -40,13 +44,16 @@ public class creatArticle extends AppCompatActivity  {
     private Date date;
     private String titleST,abstractST,subtitleST,bodyST;
     private TextView category_text, title_text, abstract_text, subtitle_text, body_text;
+    private boolean save=true;
+    private int id;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create);
-
+        Logger.log(Logger.INFO,"hello world)");
         //For PopUp
         myDialog= new Dialog(this);
+
         //Code to get the data of the spinner
         spinner = findViewById(R.id.spinner_categories);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -64,6 +71,7 @@ public class creatArticle extends AppCompatActivity  {
 
         // Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
         // Apply the adapter to the spinner
         spinner.setAdapter(adapter);
 
@@ -91,6 +99,8 @@ public class creatArticle extends AppCompatActivity  {
                   text_abstract.setText(article.getAbstractText());
                   text_subtitle.setText(article.getSubtitleText());
                   text_body.setText(article.getBodyText());
+            Logger.log (Logger.INFO,"id pentru a verifica"+id);
+                  save = false;
 
             //The key argument here must match that used in the other activity
         }
@@ -216,6 +226,17 @@ public class creatArticle extends AppCompatActivity  {
         if(isValidated()){
             articleCreated=new Article(categoryST,titleST,abstractST,bodyST,subtitleST,user);
             articleCreated.setLastUpdate(date);
+
+                if(save){
+                   SaveArticleTask saveArticleTask = new SaveArticleTask(getApplicationContext(), articleCreated);
+                   saveArticleTask.execute();
+                } else{
+                    UpdateArticleTask updateArticleTask = new UpdateArticleTask(getApplicationContext(), articleCreated, id);
+                    updateArticleTask.execute();
+                    ArticleDB.updateArticle(articleCreated);
+                }
+
+
             ShowPopUp(v);
 //            Intent intentShow= new Intent(getApplicationContext(),PopActivity.class);
 //            //To send Article to PopUp Class

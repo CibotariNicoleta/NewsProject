@@ -18,6 +18,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static com.example.newsmanagerproject.database.DatabaseConstants.DB_TABLE_FIELD_ARTICLE_ID;
+
 public class ArticleDB {
 
     private static ArticleDatabaseHelper helper;
@@ -47,28 +49,36 @@ public class ArticleDB {
         if(id_test == 0){
             Logger.log (Logger.INFO, "uuu" + " --------- >>>>>>>(Article) retrieved");
             SQLiteDatabase db = helper.getWritableDatabase();
-        values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_ID, m.getId());
+        values.put(DB_TABLE_FIELD_ARTICLE_ID, m.getId());
         values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_IDUSER,m.getIdUser());
         values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_TITLE,m.getTitleText());
         values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_CATEGORY,m.getCategory());
         values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_ABSTRACT,m.getAbstractText());
         values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_BODY,m.getBodyText());
         values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_SUBTITLE,m.getSubtitleText());
+            try {
+                if(m.getImage() != null) {
+                    try {
 
-        try {
-            values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_IMAGEDESCRIPTION,m.getImage().getDescription());
-        } catch (ServerComnmunicationError serverComnmunicationError) {
-            serverComnmunicationError.printStackTrace();
-        }
 
-        values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_THUMBNAIL,m.getThumbnail());
-        values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_LASTUPDATE,m.getLastUpdate().getTime());
-        try {
-            values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_IMAGEDATA,m.getImage().getIdArticle());
-        } catch (ServerComnmunicationError serverComnmunicationError) {
-            serverComnmunicationError.printStackTrace();
-        }
-        long insertId = db.insert(DatabaseConstants.DB_TABLE_ARTICLE_NAME, null, values);
+                        values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_IMAGEDESCRIPTION, m.getImage().getDescription());
+
+                    } catch (ServerComnmunicationError serverComnmunicationError) {
+                        serverComnmunicationError.printStackTrace();
+                    }
+
+                    values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_THUMBNAIL, m.getThumbnail());
+                    values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_LASTUPDATE, m.getLastUpdate().getTime());
+                    try {
+                        values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_IMAGEDATA, m.getImage().getIdArticle());
+                    } catch (ServerComnmunicationError serverComnmunicationError) {
+                        serverComnmunicationError.printStackTrace();
+                    }
+                }
+            } catch (ServerComnmunicationError serverComnmunicationError) {
+                serverComnmunicationError.printStackTrace();
+            }
+            long insertId = db.insert(DatabaseConstants.DB_TABLE_ARTICLE_NAME, null, values);
 
         Logger.log (Logger.INFO, "saveeee" + " --------- >>>>>>>(Article) retrieved"); }
         else{
@@ -132,6 +142,53 @@ public class ArticleDB {
         }
 
         return result;
+    }
+
+    public static boolean deleteArticle(Article article)
+    {
+        SQLiteDatabase db = helper.getReadableDatabase();
+        return db.delete(DatabaseConstants.DB_TABLE_ARTICLE_NAME, DatabaseConstants.DB_TABLE_FIELD_ARTICLE_ID + "=" + article.getId(), null) > 0;
+    }
+
+    public static void updateArticle(Article article)
+    {
+        ContentValues values = new ContentValues();
+        SQLiteDatabase dbd = helper.getReadableDatabase();
+
+        values.put(DB_TABLE_FIELD_ARTICLE_ID, article.getId());
+        values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_IDUSER,article.getIdUser());
+        values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_TITLE,article.getTitleText());
+        values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_CATEGORY,article.getCategory());
+        values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_ABSTRACT,article.getAbstractText());
+        values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_BODY,article.getBodyText());
+        values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_SUBTITLE,article.getSubtitleText());
+        try {
+            if(article.getImage() != null) {
+                try {
+
+
+                    values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_IMAGEDESCRIPTION, article.getImage().getDescription());
+
+                } catch (ServerComnmunicationError serverComnmunicationError) {
+                    serverComnmunicationError.printStackTrace();
+                }
+
+                values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_THUMBNAIL, article.getThumbnail());
+                values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_LASTUPDATE, article.getLastUpdate().getTime());
+                try {
+                    values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_IMAGEDATA, article.getImage().getIdArticle());
+                } catch (ServerComnmunicationError serverComnmunicationError) {
+                    serverComnmunicationError.printStackTrace();
+                }
+            }
+        } catch (ServerComnmunicationError serverComnmunicationError) {
+            serverComnmunicationError.printStackTrace();
+        }
+
+        SQLiteDatabase db = helper.getWritableDatabase();
+
+        db.update(DatabaseConstants.DB_TABLE_ARTICLE_NAME, values, DatabaseConstants.DB_TABLE_FIELD_ARTICLE_ID+"="+article.getId(), null );
+
     }
 }
 

@@ -62,11 +62,11 @@ public class LoadArticlesTask  extends AsyncTask<Void, Void, List<Article>> {
                 Log.d("Con la clave de API->",ModelManager.getLoggedApiKey() );
                 //System.out.println("El usuario es ->"+ ModelManager.getIdUser() +"Con la clave de API->" +ModelManager.getLoggedApiKey());//BORRAR
                 res = ModelManager.getArticles(6, 0);
-//                for (Article article : res) {
+               for (Article article : res) {
 //                    // We print articles in Log
-//                    Log.i(TAG, String.valueOf(article));
+                 Log.i(TAG, String.valueOf(article));
 //
-//                }
+               }
             } catch (ServerComnmunicationError e) {
                 Log.e(TAG,e.getMessage());
             }

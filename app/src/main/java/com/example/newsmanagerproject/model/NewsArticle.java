@@ -53,16 +53,22 @@ public class NewsArticle extends AppCompatActivity {
 
         //Decode array of character to store on byte format
         try {
-            decodedString = Base64.decode(articleNews.getImage().getImage(), Base64.DEFAULT);
+            if(articleNews.getImage() != null) {
+                try {
+                    decodedString = Base64.decode(articleNews.getImage().getImage(), Base64.DEFAULT);
+                } catch (ServerComnmunicationError serverComnmunicationError) {
+                    serverComnmunicationError.printStackTrace();
+                }
+
+                //Use bitmap object to show the images for every article
+                Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                articleImage.setImageBitmap(decodedByte);
+
+                articleImage.setImageBitmap(decodedByte);
+            }
         } catch (ServerComnmunicationError serverComnmunicationError) {
             serverComnmunicationError.printStackTrace();
         }
-
-        //Use bitmap object to show the images for every article
-        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-        articleImage.setImageBitmap(decodedByte);
-
-        articleImage.setImageBitmap(decodedByte);
 
         //CharSequence text=category.getText();
         //Snackbar.make(this,text,Snackbar.LENGTH_SHORT).show();

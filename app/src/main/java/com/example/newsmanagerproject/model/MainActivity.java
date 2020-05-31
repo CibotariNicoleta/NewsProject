@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private NewsAdapter myAdapter;
     private LoadArticlesTask loadArticlesTask;
     private FloatingActionButton loginButon;
+    private Shared shared;
     private List<Article> listRes=null;
 
     private ArticleDB dbArticle;
@@ -53,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         //db conection
         dbArticle= new ArticleDB(this);
 
@@ -76,6 +78,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         try {
             //add in db
             addInDb(loadArticlesTask.execute().get());
+
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -98,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             navigationView.setCheckedItem(R.id.category_all);
         }
 
-        if (!Login.isLogged) {
+        if (!Shared.checkLogin) {
             Log.i("Tag", "No está logueado");
         }
 
@@ -134,7 +137,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         loginButon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Login.isLogged=true;
+                Shared.checkLogin=true;
                 // loginButon.setVisibility(View.GONE);
                 //NewsAdapter.deleteButton.setVisibility(View.VISIBLE);
                 //NewsAdapter.deleteButton.setVisibility(View.VISIBLE);
@@ -160,9 +163,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(intentHome);
                 break;
             case R.id.nav_create:
-                if(Login.isLogged){
+                if(Shared.checkLogin){
                 Intent intentAddArticle = new Intent(this, creatArticle.class);
-                startActivity(intentAddArticle); }
+                startActivity(intentAddArticle); } else item.setVisible(false);
                 break;
             case R.id.category_national:
 //                getSupportFragmentManager().beginTransaction().replace(R.id., new NationalFragment()).commit();
@@ -185,7 +188,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 f=new AllFragment();
                 break;
             case R.id.nav_logout:
-                Login.isLogged = false;
+                shared.getEditor().putBoolean("b", false).apply();
+                shared.firstTime();
+                Shared.checkLogin = false;
 
                 MenuItem logout = (MenuItem) findViewById(R.id.nav_logout);
                 item.setVisible(false);
@@ -250,6 +255,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     {
         for(Article r:art)
             ArticleDB.saveNewMessage(r);
+    }
+
+    protected void onStart() {
+        super.onStart();
+        shared = new Shared(getApplicationContext());
+        //to check b is true or false
+
+        shared.firstTime();
     }
 
 }
