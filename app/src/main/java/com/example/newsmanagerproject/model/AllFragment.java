@@ -38,40 +38,49 @@ import java.util.concurrent.ExecutionException;
 
 public class AllFragment extends Fragment {
 
-    private ArrayList<Article> arrayArticle;
+    //Private methods
     private List<Article> listRes;
     private MyArticleModel model;
-    private Observer observer;
-    public Handler mhandler;
 
+    //Public methods
+    public Handler mhandler;
     public View footerView;
     public ListView recyclerView;
     public NewsAdapter myAdapter;
     public boolean isLoading = false;
 
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        listRes = new ArrayList<>(MyArticleModel.getArticles());
+        //Create handler
+        mhandler = new MyHandler();
+
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
         View root = inflater.inflate(R.layout.fragment_all, container, false);
-
-        //Load articles from Database
-        ArticleDB.resetOffset();
-        //Call loadArticleTask service
-        listRes = new ArrayList<>(ArticleDB.getArticles());
 
         // This part will show a list of articles
         recyclerView = root.findViewById(R.id.list_all);
 
+        // Initialize adapater and listview
+        initListView();
+
         //Set the footer
         LayoutInflater li = (LayoutInflater) this.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         footerView = li.inflate(R.layout.footer_view, null);
+        return root;
 
-        //Create handler
-        mhandler = new MyHandler();
+    }
 
-        myAdapter = new NewsAdapter(Objects.requireNonNull(getContext()),listRes);
+    private void initListView() {
+
+        myAdapter = new NewsAdapter(Objects.requireNonNull(getContext()), listRes);
         recyclerView.setAdapter(myAdapter);
 
         //This let us set every item clickable LUEGO DESCOMENTARTodo
@@ -80,7 +89,6 @@ public class AllFragment extends Fragment {
         recyclerView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
-
             }
 
             @Override
@@ -92,9 +100,6 @@ public class AllFragment extends Fragment {
                 }
             }
         });
-
-        return root;
-
     }
 
     public class MyHandler extends Handler {
@@ -123,7 +128,7 @@ public class AllFragment extends Fragment {
             //Add footer view
             mhandler.sendEmptyMessage(0);
             //Look for more data
-            List<Article> getList = new ArrayList<Article>(ArticleDB.getArticles());
+            List<Article> getList = new ArrayList<Article>(MyArticleModel.getMoreArticles());
             try {
                 Thread.sleep(2000);
             } catch (InterruptedException e) {

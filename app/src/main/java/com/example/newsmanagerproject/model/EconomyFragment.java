@@ -17,6 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.newsmanagerproject.Login;
+import com.example.newsmanagerproject.MyArticleModel;
 import com.example.newsmanagerproject.R;
 import com.example.newsmanagerproject.database.ArticleDB;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -43,8 +44,7 @@ public class EconomyFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         root=inflater.inflate(R.layout.fragment_economy,container,false);
 
-        ArticleDB.resetOffset();
-        listRes = ArticleDB.loadArticles();
+        listRes = MyArticleModel.getArticles();
 
         //Set the footer
         LayoutInflater li = (LayoutInflater) this.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -54,24 +54,13 @@ public class EconomyFragment extends Fragment {
         //Create handler
         mhandler = new MyHandler();
 
-        loginButon = (FloatingActionButton) root.findViewById(R.id.loginButton);
-        Log.i("LoginButton","Antes del loginButton");
-        loginButon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.i("LoginButton","Antes de llamar al login");
-                Intent intent = new Intent(getContext(), Login.class);
-                startActivity(intent);
-            }
-        });
-
         return root;
     }
 
     private void initListView(){
         // This part will show a list of articles
         listView = root.findViewById(R.id.list_economy);
-        economyAdapter = new NewsAdapter(Objects.requireNonNull(getContext()), getListFilter(listRes));
+        economyAdapter = new NewsAdapter(Objects.requireNonNull(getContext()), MyArticleModel.getListFilter(listRes,4));
         listView.setAdapter(economyAdapter);
         //This let us set every item clickable LUEGO DESCOMENTARTodo
         listView.setClickable(true);
@@ -122,7 +111,7 @@ public class EconomyFragment extends Fragment {
 
             //Look for more data
             List<Article> getList=new ArrayList<Article>(ArticleDB.getArticles());
-            getList=getListFilter(getList);
+            getList=MyArticleModel.getListFilter(getList,4);
 
             try {
                 Thread.sleep(3000);
@@ -134,16 +123,5 @@ public class EconomyFragment extends Fragment {
             mhandler.sendMessage(msgRes);
 
         }
-    }
-
-    private List<Article> getListFilter(List<Article> pre){
-        List<Article> res=new ArrayList<Article>();
-        for (int i=0; i<pre.size();i++){
-            Article addArticle=pre.get(i);
-            if(addArticle.getCategory().equals("Economy")){
-                res.add(addArticle);
-            }
-        }
-        return res;
     }
 }

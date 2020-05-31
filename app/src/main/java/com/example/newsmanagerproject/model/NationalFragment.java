@@ -19,6 +19,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.newsmanagerproject.LoadArticlesTask;
 import com.example.newsmanagerproject.Login;
+import com.example.newsmanagerproject.MyArticleModel;
 import com.example.newsmanagerproject.R;
 import com.example.newsmanagerproject.database.ArticleDB;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -44,10 +45,7 @@ public class NationalFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root=inflater.inflate(R.layout.fragment_national,container,false);
 
-
-        //Load articles from Database
-        ArticleDB.resetOffset();
-        listRes = ArticleDB.loadArticles();
+        listRes = MyArticleModel.getArticles();
 
 
         // This part will show a list of articles
@@ -57,11 +55,15 @@ public class NationalFragment extends Fragment {
         LayoutInflater li = (LayoutInflater) this.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         footerView = li.inflate(R.layout.footer_view, null);
 
+        initListView();
         //Create handler
         mhandler = new MyHandler();
 
+        return root;
+    }
 
-        myAdapter = new NewsAdapter(Objects.requireNonNull(getContext()), getListFilter(listRes));
+    private void initListView(){
+        myAdapter = new NewsAdapter(Objects.requireNonNull(getContext()), MyArticleModel.getListFilter(listRes,1));
         recyclerView.setAdapter(myAdapter);
 
         //This let us set every item clickable LUEGO DESCOMENTARTodo
@@ -82,19 +84,6 @@ public class NationalFragment extends Fragment {
                 }
             }
         });
-
-        return root;
-    }
-
-    private List<Article> getListFilter(List<Article> pre){
-        List<Article> res=new ArrayList<Article>();
-        for (int i=0; i<pre.size();i++){
-            Article addArticle=pre.get(i);
-            if(addArticle.getCategory().equals("National")){
-                res.add(addArticle);
-            }
-        }
-        return res;
     }
 
     public class MyHandler extends Handler {
@@ -126,7 +115,7 @@ public class NationalFragment extends Fragment {
 
             //Look for more data
             List<Article> getList=new ArrayList<Article>(ArticleDB.getArticles());
-                getList=getListFilter(getList);
+                getList=MyArticleModel.getListFilter(getList,1);
 
             try {
                 Thread.sleep(3000);

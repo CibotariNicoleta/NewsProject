@@ -17,6 +17,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.Group;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
@@ -60,47 +61,53 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        //Create FragmentManager
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        //db conection
-        dbArticle = new ArticleDB(this);
-
-        //SideBar
-        Toolbar toolbar = findViewById(R.id.toolbarPerfect);
-        setSupportActionBar(toolbar);
-
-        // DrawerLayOut get the xml object
-        drawerLayout = findViewById(R.id.drawer_layout);
-
-        //To set the menu in the sidebar
-        navigationView = findViewById(R.id.nav_controller_view_tag);
-        navigationView.setNavigationItemSelectedListener(this);
-
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawerLayout.addDrawerListener(toggle);
-        toggle.syncState();
-
-
         if (savedInstanceState == null) {
-            transaction.add(R.id.fragment, new AllFragment()).commit();
-            transaction.addToBackStack(null);
-            navigationView.setCheckedItem(R.id.category_all);
-        }
+            setContentView(R.layout.activity_main);
 
-        loginButton = findViewById(R.id.loginButton);
-        if (Shared.checkLogin) {
-            loginButton.setVisibility(View.INVISIBLE);
-        }
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getBaseContext(), Login.class);
-                startActivity(intent);
+            //Create FragmentManager
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            //db conection
+
+            dbArticle = new ArticleDB(this);
+
+            //SideBar
+            Toolbar toolbar = findViewById(R.id.toolbarPerfect);
+            setSupportActionBar(toolbar);
+
+            // DrawerLayOut get the xml object
+            drawerLayout = findViewById(R.id.drawer_layout);
+
+            //To set the menu in the sidebar
+            navigationView = findViewById(R.id.nav_controller_view_tag);
+            navigationView.setNavigationItemSelectedListener(this);
+
+            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+            drawerLayout.addDrawerListener(toggle);
+            toggle.syncState();
+
+
+            if (savedInstanceState == null) {
+                transaction.add(R.id.fragment, new AllFragment()).commit();
+                transaction.addToBackStack(null);
+                navigationView.setCheckedItem(R.id.category_all);
             }
-        });
 
+            loginButton = findViewById(R.id.loginButton);
+            if (Shared.checkLogin) {
+                loginButton.setVisibility(View.INVISIBLE);
+//                MenuItem createItem = findViewById(R.id.nav_create);
+//                MenuItem logOutItem = findViewById(R.id.nav_logout);
+//                createItem.setVisible(true);
+//                logOutItem.setVisible(true);
+            }
+            loginButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getBaseContext(), Login.class);
+                    startActivity(intent);
+                }
+            });
+        }
 
     }
 
@@ -114,10 +121,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(intentHome);
                 break;
             case R.id.nav_create:
-                if (Shared.checkLogin) {
-                    Intent intentAddArticle = new Intent(this, creatArticle.class);
-                    startActivity(intentAddArticle);
-                } else item.setVisible(false);
+                Intent intentAddArticle = new Intent(this, creatArticle.class);
+                startActivity(intentAddArticle);
                 break;
             case R.id.category_national:
                 f = new NationalFragment();
@@ -138,18 +143,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 shared.getEditor().putBoolean("b", false).apply();
                 shared.firstTime();
                 Shared.checkLogin = false;
-
-                MenuItem logout = (MenuItem) findViewById(R.id.nav_logout);
-                item.setVisible(false);
-
-                MenuItem create = (MenuItem) findViewById(R.id.nav_create);
-                item.setVisible(false);
-
+                Intent intent = getIntent();
+                finish();
+                startActivity(intent);
                 //loginButon.setVisibility(View.VISIBLE);
-                NewsAdapter.deleteButton.setVisibility(View.GONE);
-                NewsAdapter.modifyButton.setVisibility(View.GONE);
-
-
+//                NewsAdapter.deleteButton.setVisibility(View.GONE);
+//                NewsAdapter.modifyButton.setVisibility(View.GONE);
                 /// WE HAVE TO IMPLEMENT LOGOUT FUNCTION
                 break;
         }

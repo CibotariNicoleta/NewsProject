@@ -17,6 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.newsmanagerproject.Login;
+import com.example.newsmanagerproject.MyArticleModel;
 import com.example.newsmanagerproject.R;
 import com.example.newsmanagerproject.database.ArticleDB;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -42,25 +43,21 @@ public class TechnologyFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.fragment_technology, container, false);
 
-        ArticleDB.resetOffset();
-        listRes = ArticleDB.loadArticles();
+        listRes = MyArticleModel.getArticles();
 
         //Set the footer
         LayoutInflater li = (LayoutInflater) this.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         footerView = li.inflate(R.layout.footer_view, null);
-
         initListView();
         //Create handler
         mhandler = new MyHandler();
-
-
         return root;
     }
 
     private void initListView() {
         // This part will show a list of articles
-        listView = root.findViewById(R.id.list_economy);
-        techAdapter = new NewsAdapter(Objects.requireNonNull(getContext()), getListFilter(listRes));
+        listView = root.findViewById(R.id.list_technology);
+        techAdapter = new NewsAdapter(Objects.requireNonNull(getContext()), MyArticleModel.getListFilter(listRes,2));
         listView.setAdapter(techAdapter);
 
         //This let us set every item clickable
@@ -111,7 +108,7 @@ public class TechnologyFragment extends Fragment {
 
             //Look for more data
             List<Article> getList = new ArrayList<Article>(ArticleDB.getArticles());
-            getList = getListFilter(getList);
+            getList = MyArticleModel.getListFilter(getList,2);
 
             try {
                 Thread.sleep(3000);
@@ -123,16 +120,5 @@ public class TechnologyFragment extends Fragment {
             mhandler.sendMessage(msgRes);
 
         }
-    }
-
-    private List<Article> getListFilter(List<Article> pre) {
-        List<Article> res = new ArrayList<Article>();
-        for (int i = 0; i < pre.size(); i++) {
-            Article addArticle = pre.get(i);
-            if (addArticle.getCategory().equals("Technology")) {
-                res.add(addArticle);
-            }
-        }
-        return res;
     }
 }

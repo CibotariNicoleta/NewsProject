@@ -22,7 +22,7 @@ public class MyArticleModel {
      * visualize in the view components
      */
 
-    public List<Article> getArticles() {
+    public static List<Article> getArticles() {
         if (articles == null) {
             articles = new ArrayList<Article>();
             loadArticles();
@@ -34,25 +34,53 @@ public class MyArticleModel {
      * loadArticles(): This method calls getArticles of DB to
      * get articles in 2 ways. From the article server or from article DB.
      */
-    private void loadArticles() {
-        List<Article> res = new ArrayList<Article>();
+    private static void loadArticles() {
+
         List<Article> aux = new ArrayList<Article>(ArticleDB.getArticles());
         Iterator<Article> iterator = aux.iterator();
         while (iterator.hasNext()) {
-            res.add((Article) iterator.next());
+            articles.add((Article) iterator.next());
         }
-        articles.addAll(res);
     }
 
     /**
      * getMoreArticles(): This method load more articles from DB or
      * article server and add those elements to articles "atribute"
      */
-    public void getMoreArticles() {
+    public static List<Article> getMoreArticles() {
         List<Article> aux = new ArrayList<Article>(ArticleDB.getArticles());
-        List<Article> res = new ArrayList<>(Objects.requireNonNull(articles));
-        res.addAll(aux);
-        articles.addAll(res);
+        articles.addAll(aux);
+        return aux;
+    }
 
+    /**
+     * getListFilter(param1 , param2): This method filter the list of articles
+     * stored in param1 by category provided in the param2.
+     */
+    public static List<Article> getListFilter(List<Article> pre, int type) {
+        String selectType = new String();
+        switch (type) {
+            case 1:
+                selectType = "National";
+                break;
+            case 2:
+                selectType = "Technology";
+                break;
+            case 3:
+                selectType = "Sports";
+                break;
+            case 4:
+                selectType = "Economy";
+                break;
+        }
+
+        List<Article> res = new ArrayList<Article>();
+        for (int i = 0; i < pre.size(); i++) {
+            Article addArticle = pre.get(i);
+            if (addArticle.getCategory().equals(selectType)) {
+                res.add(addArticle);
+            }
+        }
+        return res;
     }
 }

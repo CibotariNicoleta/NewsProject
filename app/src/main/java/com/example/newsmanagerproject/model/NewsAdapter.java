@@ -71,8 +71,6 @@ public class NewsAdapter extends ArrayAdapter<Article> {
         myCard = listItem.findViewById(R.id.myCard);
 
 
-
-
         deleteButton= listItem.findViewById(R.id.deleteButton);
         modifyButton= listItem.findViewById(R.id.modifyButton);
 

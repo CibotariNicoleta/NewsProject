@@ -62,7 +62,6 @@ public class LoadArticlesTask extends AsyncTask<Void, Void, List<Article>> {
                 int index = res.size();
                 if (index != 0) {
                     offset = offset + index;
-//                    addInDb(res);
                 }
             } catch (ServerComnmunicationError e) {
                 Log.e(TAG, e.getMessage());
