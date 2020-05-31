@@ -41,11 +41,8 @@ import java.util.Observable;
 import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-    private ListView recyclerView;
-    private NewsAdapter myAdapter;
-    private LoadArticlesTask loadArticlesTask;
+
     private Shared shared;
-    private List<Article> listRes = null;
     private MyArticleModel model;
 
     public static FloatingActionButton loginButton;
@@ -93,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         loginButton = findViewById(R.id.loginButton);
-        if(Shared.checkLogin){
+        if (Shared.checkLogin) {
             loginButton.setVisibility(View.INVISIBLE);
         }
         loginButton.setOnClickListener(new View.OnClickListener() {
@@ -109,7 +106,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        Log.i("onNaviSelec", "Antes");
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         Fragment f = new Fragment();
         switch (item.getItemId()) {
@@ -184,13 +180,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onBackPressed() {
-        Log.i("onBackPressed", "Antes");
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
         }
-        Log.i("onBackPressed", "Después");
     }
 
 
