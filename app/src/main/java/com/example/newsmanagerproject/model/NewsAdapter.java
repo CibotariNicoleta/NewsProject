@@ -29,6 +29,7 @@ import androidx.cardview.widget.CardView;
 
 import com.example.newsmanagerproject.Login;
 import com.example.newsmanagerproject.R;
+import com.example.newsmanagerproject.database.ArticleDB;
 import com.example.newsmanagerproject.network.ModelManager;
 import com.example.newsmanagerproject.network.errors.ServerComnmunicationError;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -75,7 +76,7 @@ public class NewsAdapter extends ArrayAdapter<Article> {
         deleteButton= listItem.findViewById(R.id.deleteButton);
         modifyButton= listItem.findViewById(R.id.modifyButton);
 
-       if(!Login.isLogged){
+       if(!Shared.checkLogin){
             deleteButton.setVisibility(View.GONE);
             modifyButton.setVisibility(View.GONE);
         }else{
@@ -92,14 +93,20 @@ public class NewsAdapter extends ArrayAdapter<Article> {
 
         //Decode array of character to store on byte format
         try {
-            decodedString = Base64.decode(article.getImage().getImage(), Base64.DEFAULT);
+            if(article.getImage()!=null) {
+                try {
+                    decodedString = Base64.decode(article.getImage().getImage(), Base64.DEFAULT);
+                } catch (ServerComnmunicationError serverComnmunicationError) {
+                    serverComnmunicationError.printStackTrace();
+                }
+
+                //Use bitmap object to show the images for every article
+                Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                image.setImageBitmap(decodedByte);
+            }
         } catch (ServerComnmunicationError serverComnmunicationError) {
             serverComnmunicationError.printStackTrace();
         }
-
-        //Use bitmap object to show the images for every article
-        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-        image.setImageBitmap(decodedByte);
 
         TextView category = (TextView) listItem.findViewById(R.id.newsCategory);
         category.setText(article.getCategory());
@@ -176,20 +183,9 @@ public class NewsAdapter extends ArrayAdapter<Article> {
         accept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Thread thread = new Thread(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        try  {
-                            RetrieveArticleTask delete = new RetrieveArticleTask(article.getId()) ;
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-
-                thread.start();
-
+                RetrieveArticleTask delete = new RetrieveArticleTask(getContext(), article) ;
+                delete.execute();
+                ArticleDB.deleteArticle(article);
                 Snackbar.make(v,"Deleted with succes!",Snackbar.LENGTH_LONG).setActionTextColor(Color.MAGENTA).show();
             }
         });

@@ -42,6 +42,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private NewsAdapter myAdapter;
     private LoadArticlesTask loadArticlesTask;
     private FloatingActionButton loginButon;
+    private Shared shared;
+    private List<Article> listRes=null;
     private MyArticleModel model;
     private List<Article> listRes = null;
 
@@ -100,9 +102,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(intentHome);
                 break;
             case R.id.nav_create:
-                if(Login.isLogged){
+                if(Shared.checkLogin){
                 Intent intentAddArticle = new Intent(this, creatArticle.class);
-                startActivity(intentAddArticle); }
+                startActivity(intentAddArticle); } else item.setVisible(false);
                 break;
             case R.id.category_national:
                 f = new NationalFragment();
@@ -120,7 +122,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 f = new AllFragment();
                 break;
             case R.id.nav_logout:
-                Login.isLogged = false;
+                shared.getEditor().putBoolean("b", false).apply();
+                shared.firstTime();
+                Shared.checkLogin = false;
 
                 MenuItem logout = (MenuItem) findViewById(R.id.nav_logout);
                 item.setVisible(false);
@@ -178,6 +182,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             super.onBackPressed();
         }
         Log.i("onBackPressed", "Después");
+    }
+
+
+    protected void onStart() {
+        super.onStart();
+        shared = new Shared(getApplicationContext());
+        //to check b is true or false
+
+        shared.firstTime();
     }
 
 }

@@ -78,10 +78,5 @@ public class LoadArticlesTask extends AsyncTask<Void, Void, List<Article>> {
     public static int getOffset() {
         return offset;
     }
-
-    public void addInDb(List<Article> art) {
-        for (Article r : art)
-            ArticleDB.saveNewMessage(r);
-    }
 }
 
