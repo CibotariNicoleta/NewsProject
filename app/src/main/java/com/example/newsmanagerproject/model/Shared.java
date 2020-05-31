@@ -26,6 +26,7 @@ public class Shared {
         editor = sharedPreferences.edit();
     }
 
+
     //for second time user
     public void secondtime(){
         checkLogin = true;
