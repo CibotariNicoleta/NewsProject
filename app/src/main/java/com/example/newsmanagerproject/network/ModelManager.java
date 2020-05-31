@@ -357,7 +357,7 @@ public class ModelManager {
     public static int updateArticle(Article a, int idArticle) throws ServerComnmunicationError{
         try {
             String parameters = "";
-            String request = rc.serviceUrl + "article" + idArticle;
+            String request = rc.serviceUrl + "article/" + idArticle;
 
             URL url = new URL(request);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();

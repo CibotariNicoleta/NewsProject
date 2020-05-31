@@ -237,8 +237,6 @@ public class creatArticle extends AppCompatActivity  {
                     updateArticleTask.execute();
                     ArticleDB.updateArticle(articleCreated);
                 }
-
-
             ShowPopUp(v);
 //            Intent intentShow= new Intent(getApplicationContext(),PopActivity.class);
 //            //To send Article to PopUp Class
