@@ -89,7 +89,7 @@ public class ArticleDB {
         else{
            // helper.update(m);
         }
-
+        cursor.close();
     }
 
 
@@ -247,6 +247,7 @@ public class ArticleDB {
             cursor.moveToNext();
         }
         offset = offset + cursor.getCount();
+        cursor.close();
         return resList;
     }
 

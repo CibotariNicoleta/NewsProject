@@ -61,55 +61,58 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (savedInstanceState == null) {
             setContentView(R.layout.activity_main);
 
-            //Create FragmentManager
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            //db conection
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    //Create FragmentManager
+                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                    //db conection
 
-            dbArticle = new ArticleDB(this);
+                    dbArticle = new ArticleDB(getApplicationContext());
 
-            //SideBar
-            Toolbar toolbar = findViewById(R.id.toolbarPerfect);
-            setSupportActionBar(toolbar);
+                    //SideBar
+                    Toolbar toolbar = findViewById(R.id.toolbarPerfect);
+                    setSupportActionBar(toolbar);
 
-            // DrawerLayOut get the xml object
-            drawerLayout = findViewById(R.id.drawer_layout);
+                    // DrawerLayOut get the xml object
+                    drawerLayout = findViewById(R.id.drawer_layout);
 
-            //To set the menu in the sidebar
-            navigationView = findViewById(R.id.nav_controller_view_tag);
-            navigationView.setNavigationItemSelectedListener(this);
+                    //To set the menu in the sidebar
+                    navigationView = findViewById(R.id.nav_controller_view_tag);
+                    navigationView.setNavigationItemSelectedListener(MainActivity.this);
 
-            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-            drawerLayout.addDrawerListener(toggle);
-            toggle.syncState();
+                    ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(MainActivity.this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                    drawerLayout.addDrawerListener(toggle);
+                    toggle.syncState();
 
 
-            if (savedInstanceState == null) {
-                transaction.add(R.id.fragment, new AllFragment()).commit();
-                transaction.addToBackStack(null);
-                navigationView.setCheckedItem(R.id.category_all);
-            }
+                    if (savedInstanceState == null) {
+                        transaction.add(R.id.fragment, new AllFragment()).commit();
+                        transaction.addToBackStack(null);
+                        navigationView.setCheckedItem(R.id.category_all);
+                    }
 
-            loginButton = findViewById(R.id.loginButton);
-            if (Shared.checkLogin) {
-                loginButton.setVisibility(View.INVISIBLE);
+                    loginButton = findViewById(R.id.loginButton);
+                    if (Shared.checkLogin) {
+                        loginButton.setVisibility(View.INVISIBLE);
 //                MenuItem createItem = findViewById(R.id.nav_create);
 //                MenuItem logOutItem = findViewById(R.id.nav_logout);
 //                createItem.setVisible(true);
 //                logOutItem.setVisible(true);
-            }
-            loginButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getBaseContext(), Login.class);
-                    startActivity(intent);
+                    }
+                    loginButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(getBaseContext(), Login.class);
+                            startActivity(intent);
+                        }
+                    });
                 }
             });
-        }
 
-    }
+        }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -144,6 +147,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 shared.firstTime();
                 Shared.checkLogin = false;
                 Intent intent = getIntent();
+
                 finish();
                 startActivity(intent);
                 //loginButon.setVisibility(View.VISIBLE);
@@ -191,7 +195,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onStart();
         shared = new Shared(getApplicationContext());
         //to check b is true or false
-
         shared.firstTime();
     }
 
