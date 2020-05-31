@@ -45,7 +45,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Shared shared;
     private List<Article> listRes=null;
     private MyArticleModel model;
-    private List<Article> listRes = null;
 
     ArticleDatabaseHelper dbHelper = new ArticleDatabaseHelper(getBaseContext());
 
