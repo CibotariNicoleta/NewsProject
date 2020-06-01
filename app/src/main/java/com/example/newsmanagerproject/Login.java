@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.example.newsmanagerproject.model.MainActivity;
 import com.example.newsmanagerproject.model.Shared;
+import com.example.newsmanagerproject.network.LoginTask;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 
@@ -67,7 +68,8 @@ public class Login extends AppCompatActivity {
                         pwd.getText().toString().equals("65424")) {
 
                     MainActivity.loginButton.setVisibility(View.INVISIBLE);
-
+                    LoginTask loginTask= new LoginTask();
+                    loginTask.execute();
                     Intent intentGoLogging = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(intentGoLogging);
                     shared.secondtime();

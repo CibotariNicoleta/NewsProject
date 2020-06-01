@@ -12,7 +12,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".model.PopActivityDelete"></activity>
+        <activity android:name=".model.PopActivityDelete"
+            android:parentActivityName=".model.MainActivity"
+            android:theme="@style/AppTheme.CustomTheme">
+            <!-- The meta-data tag is required if you support API level 15 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".model.MainActivity" />
+        </activity>
         <activity
             android:name=".model.PopActivity"
             android:parentActivityName=".model.MainActivity"

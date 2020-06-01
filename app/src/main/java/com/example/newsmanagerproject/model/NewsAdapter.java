@@ -115,7 +115,7 @@ public class NewsAdapter extends ArrayAdapter<Article> {
         TextView Abstract = (TextView) listItem.findViewById(R.id.newsAbstract);
         Abstract.setText(article.getAbstractText());
 
-        SimpleDateFormat formatter = new SimpleDateFormat(
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat formatter = new SimpleDateFormat(
                 "yyyy-MM-dd HH:mm:ss");
         EditText date = (EditText) listItem.findViewById(R.id.date_and_time);
         date.setText(formatter.format(article.getLastUpdate()));
