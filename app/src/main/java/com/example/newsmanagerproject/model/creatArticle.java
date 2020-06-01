@@ -285,34 +285,8 @@ public class creatArticle extends AppCompatActivity  {
             public void onClick(View v) {
                 //We have to send create Request To API
 
-                // We call loadTask method
-
-
-
-                //Create the params cuz is a new instance
-
-                int res=0;
-                try {
-                    res=ModelManager.saveArticle(articleCreated);
-                } catch (ServerComnmunicationError serverComnmunicationError) {
-                    serverComnmunicationError.printStackTrace();
-                }
-                String var=Integer.toString(res);
-                Snackbar.make(v,"Resultado de la llamada es-> "+ var ,Snackbar.LENGTH_LONG).show();
-//                LoadArticlesTask loadArticlesTask;
-//                loadArticlesTask = new LoadArticlesTask(getBaseContext());
-//                try {
-//
-//                    loadArticlesTask.execute().get();
-//                } catch (ExecutionException e) {
-//                    e.printStackTrace();
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-
-
                 //And go to Main Activity
-                Intent intentMainAct = new Intent(getApplicationContext(), MainActivity.class);
+                Intent intentMainAct= new Intent(getApplicationContext(),MainActivity.class);
 //            //To send Article to PopUp Class
                 startActivity(intentMainAct);
             }
