@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.graphics.Movie;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -173,8 +174,7 @@ public class NewsAdapter extends ArrayAdapter<Article> {
         close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mContext, MainActivity.class);
-                mContext.startActivity(intent);
+                dialog.dismiss();
             }
         });
 
@@ -184,7 +184,15 @@ public class NewsAdapter extends ArrayAdapter<Article> {
                 RetrieveArticleTask delete = new RetrieveArticleTask(getContext(), article) ;
                 delete.execute();
                 ArticleDB.deleteArticle(article);
-                Snackbar.make(v,"Deleted with succes!",Snackbar.LENGTH_LONG).setActionTextColor(Color.MAGENTA).show();
+                dialog.dismiss();
+                Snackbar.make(v,"Deleted with success!",Snackbar.LENGTH_LONG).setActionTextColor(Color.MAGENTA).show();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Intent i = new Intent(mContext.getApplicationContext(), MainActivity.class);
+                        mContext.startActivity(i);
+                    }
+                }, 1000);
             }
         });
     }

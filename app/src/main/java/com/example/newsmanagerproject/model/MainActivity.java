@@ -146,7 +146,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 shared.firstTime();
                 Shared.checkLogin = false;
                 Intent intent = getIntent();
-
                 finish();
                 startActivity(intent);
                 //loginButon.setVisibility(View.VISIBLE);
