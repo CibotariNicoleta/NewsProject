@@ -11,7 +11,9 @@ public class Shared {
     //context pass the references to another class
     Context context;
 
+    //When you click in login set true
     public static boolean checkLogin;
+
     int mode = 0;
 
     //shared preferences name
@@ -41,8 +43,8 @@ public class Shared {
         } else checkLogin = true;
     }
 
-    private boolean login(){
-        return sharedPreferences.getBoolean(Data, true);
+    public boolean login(){
+        return sharedPreferences.getBoolean(Data, false);
     }
 
     public SharedPreferences getSharedPreferences() {

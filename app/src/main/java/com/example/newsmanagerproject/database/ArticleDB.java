@@ -42,9 +42,8 @@ public class ArticleDB {
                 null, DatabaseConstants.DB_TABLE_FIELD_ARTICLE_LASTUPDATE);
         cursor.moveToFirst();
 
-        int id_test=0;
-        while (!cursor.isAfterLast())
-        {
+        int id_test = 0;
+        while (!cursor.isAfterLast()) {
             int id = cursor.getInt(0);
             if ((id == m.getId()) && (cursor.getInt(1) == m.getIdUser()))
                 id_test = 1;
@@ -54,15 +53,15 @@ public class ArticleDB {
         if (id_test == 0) {
             Logger.log(Logger.INFO, "uuu" + " --------- >>>>>>>(Article) retrieved");
             SQLiteDatabase db = helper.getWritableDatabase();
-        values.put(DB_TABLE_FIELD_ARTICLE_ID, m.getId());
-        values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_IDUSER,m.getIdUser());
-        values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_TITLE,m.getTitleText());
-        values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_CATEGORY,m.getCategory());
-        values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_ABSTRACT,m.getAbstractText());
-        values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_BODY,m.getBodyText());
-        values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_SUBTITLE,m.getSubtitleText());
+            values.put(DB_TABLE_FIELD_ARTICLE_ID, m.getId());
+            values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_IDUSER, m.getIdUser());
+            values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_TITLE, m.getTitleText());
+            values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_CATEGORY, m.getCategory());
+            values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_ABSTRACT, m.getAbstractText());
+            values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_BODY, m.getBodyText());
+            values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_SUBTITLE, m.getSubtitleText());
             try {
-                if(m.getImage() != null) {
+                if (m.getImage() != null) {
                     try {
 
 
@@ -85,9 +84,9 @@ public class ArticleDB {
             }
             long insertId = db.insert(DatabaseConstants.DB_TABLE_ARTICLE_NAME, null, values);
 
-        Logger.log (Logger.INFO, "saveeee" + " --------- >>>>>>>(Article) retrieved"); }
-        else{
-           // helper.update(m);
+            Logger.log(Logger.INFO, "saveeee" + " --------- >>>>>>>(Article) retrieved");
+        } else {
+            // helper.update(m);
         }
         cursor.close();
     }
@@ -149,26 +148,24 @@ public class ArticleDB {
         return result;
     }
 
-    public static boolean deleteArticle(Article article)
-    {
+    public static boolean deleteArticle(Article article) {
         SQLiteDatabase db = helper.getReadableDatabase();
         return db.delete(DatabaseConstants.DB_TABLE_ARTICLE_NAME, DatabaseConstants.DB_TABLE_FIELD_ARTICLE_ID + "=" + article.getId(), null) > 0;
     }
 
-    public static void updateArticle(Article article)
-    {
+    public static void updateArticle(Article article) {
         ContentValues values = new ContentValues();
         SQLiteDatabase dbd = helper.getReadableDatabase();
 
         values.put(DB_TABLE_FIELD_ARTICLE_ID, article.getId());
-        values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_IDUSER,article.getIdUser());
-        values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_TITLE,article.getTitleText());
-        values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_CATEGORY,article.getCategory());
-        values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_ABSTRACT,article.getAbstractText());
-        values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_BODY,article.getBodyText());
-        values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_SUBTITLE,article.getSubtitleText());
+        values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_IDUSER, article.getIdUser());
+        values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_TITLE, article.getTitleText());
+        values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_CATEGORY, article.getCategory());
+        values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_ABSTRACT, article.getAbstractText());
+        values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_BODY, article.getBodyText());
+        values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_SUBTITLE, article.getSubtitleText());
         try {
-            if(article.getImage() != null) {
+            if (article.getImage() != null) {
                 try {
 
 
@@ -192,7 +189,7 @@ public class ArticleDB {
 
         SQLiteDatabase db = helper.getWritableDatabase();
 
-        db.update(DatabaseConstants.DB_TABLE_ARTICLE_NAME, values, DatabaseConstants.DB_TABLE_FIELD_ARTICLE_ID+"="+article.getId(), null );
+        db.update(DatabaseConstants.DB_TABLE_ARTICLE_NAME, values, DatabaseConstants.DB_TABLE_FIELD_ARTICLE_ID + "=" + article.getId(), null);
 
     }
 
@@ -246,7 +243,10 @@ public class ArticleDB {
             resList.add(article);
             cursor.moveToNext();
         }
-        offset = offset + cursor.getCount();
+        int moreLength = cursor.getCount();
+        int changeOffset = LoadArticlesTask.getOffset();
+        offset = offset + moreLength;
+        LoadArticlesTask.setOffset(changeOffset + moreLength); //Prueba
         cursor.close();
         return resList;
     }
@@ -274,15 +274,16 @@ public class ArticleDB {
             LoadArticlesTask loadArticlesTask = new LoadArticlesTask();
             try {
                 res = loadArticlesTask.execute().get();
+                if (res.size() != 0) {
                     for (Article r : res)
                         saveNewMessage(r);
+                }
             } catch (ExecutionException e) {
                 e.printStackTrace();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
-
         return res;
     }
 }

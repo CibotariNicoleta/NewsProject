@@ -33,6 +33,7 @@ import com.example.newsmanagerproject.MyArticleModel;
 import com.example.newsmanagerproject.R;
 import com.example.newsmanagerproject.database.ArticleDB;
 import com.example.newsmanagerproject.database.ArticleDatabaseHelper;
+import com.example.newsmanagerproject.network.LoginTask;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
@@ -45,7 +46,6 @@ import java.util.concurrent.ExecutionException;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private Shared shared;
-    private MyArticleModel model;
 
     public static FloatingActionButton loginButton;
 
@@ -56,14 +56,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     DrawerLayout drawerLayout;
     NavigationView navigationView;
 
-    // public static boolean isLogged = false;
-
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        shared = new Shared(getApplicationContext());
+        shared.firstTime();
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -95,7 +94,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
 
                 loginButton = findViewById(R.id.loginButton);
-                if (Shared.checkLogin) {
+                if (shared.login()) {
+                    LoginTask loginTask= new LoginTask();
+                    loginTask.execute();
                     loginButton.setVisibility(View.INVISIBLE);
                     Menu navMenus=navigationView.getMenu();
                     navMenus.findItem(R.id.nav_logout).setVisible(true);
@@ -148,10 +149,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Intent intent = getIntent();
                 finish();
                 startActivity(intent);
-                //loginButon.setVisibility(View.VISIBLE);
-//                NewsAdapter.deleteButton.setVisibility(View.GONE);
-//                NewsAdapter.modifyButton.setVisibility(View.GONE);
-                /// WE HAVE TO IMPLEMENT LOGOUT FUNCTION
                 break;
         }
         if (f != null) {
@@ -186,14 +183,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else {
             super.onBackPressed();
         }
-    }
-
-
-    protected void onStart() {
-        super.onStart();
-        shared = new Shared(getApplicationContext());
-        //to check b is true or false
-        shared.firstTime();
     }
 
 }

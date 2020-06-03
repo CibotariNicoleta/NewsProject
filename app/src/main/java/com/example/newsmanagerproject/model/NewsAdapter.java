@@ -29,6 +29,7 @@ import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 
 import com.example.newsmanagerproject.Login;
+import com.example.newsmanagerproject.MyArticleModel;
 import com.example.newsmanagerproject.R;
 import com.example.newsmanagerproject.database.ArticleDB;
 import com.example.newsmanagerproject.network.ModelManager;
@@ -159,10 +160,6 @@ public class NewsAdapter extends ArrayAdapter<Article> {
         return listItem;
     }
 
-    private boolean isLogged(){
-        return Login.isLogged;
-    }
-
     private void ShowPopUp(View v, Article article){
 
         dialog.setContentView(R.layout.activity_pop_delete);
@@ -184,6 +181,8 @@ public class NewsAdapter extends ArrayAdapter<Article> {
                 RetrieveArticleTask delete = new RetrieveArticleTask(getContext(), article) ;
                 delete.execute();
                 ArticleDB.deleteArticle(article);
+                MyArticleModel.deleteArticle(article);
+                notifyDataSetChanged();
                 dialog.dismiss();
                 Snackbar.make(v,"Deleted with success!",Snackbar.LENGTH_LONG).setActionTextColor(Color.MAGENTA).show();
                 new Handler().postDelayed(new Runnable() {

@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.newsmanagerproject.MyArticleModel;
 import com.example.newsmanagerproject.R;
 import com.example.newsmanagerproject.database.ArticleDB;
 import com.example.newsmanagerproject.network.ModelManager;
@@ -34,7 +35,7 @@ import com.google.android.material.snackbar.Snackbar;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class creatArticle extends AppCompatActivity  {
+public class creatArticle extends AppCompatActivity {
     private Spinner spinner;
     private FloatingActionButton saveButton, cancelButton;
     private EditText text_title, text_abstract, text_subtitle, text_body;
@@ -42,10 +43,11 @@ public class creatArticle extends AppCompatActivity  {
     private Article articleCreated;
     private Dialog myDialog;
     private Date date;
-    private String titleST,abstractST,subtitleST,bodyST;
+    private String titleST, abstractST, subtitleST, bodyST;
     private TextView category_text, title_text, abstract_text, subtitle_text, body_text;
-    private boolean save=true;
+    private boolean save = true;
     private int id;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,7 +61,7 @@ public class creatArticle extends AppCompatActivity  {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 categoryST = spinner.getSelectedItem().toString();
-                Snackbar.make(view,"Item selected -> "+categoryST,Snackbar.LENGTH_LONG).show();
+                Snackbar.make(view, "Item selected -> " + categoryST, Snackbar.LENGTH_LONG).show();
             }
 
             @Override
@@ -76,10 +78,10 @@ public class creatArticle extends AppCompatActivity  {
         // Apply the adapter to the spinner
         spinner.setAdapter(adapter);
 
-        text_title=findViewById(R.id.text_create_title);
-        text_abstract=findViewById(R.id.text_create_abstract);
-        text_subtitle=findViewById(R.id.text_create_subtitle);
-        text_body=findViewById(R.id.text_create_body);
+        text_title = findViewById(R.id.text_create_title);
+        text_abstract = findViewById(R.id.text_create_abstract);
+        text_subtitle = findViewById(R.id.text_create_subtitle);
+        text_body = findViewById(R.id.text_create_body);
 
 
         //get current time
@@ -88,38 +90,27 @@ public class creatArticle extends AppCompatActivity  {
         date = new Date(System.currentTimeMillis());
         System.out.println("current time is: " + date);
 
-       //update article
+        //update article
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             //String jsonArticle = extras.getString("Article");
             Article article = (Article) extras.getSerializable("Article");
-
-                //  Article article = extras.getParcelable("Article");
-                  System.out.println("art" + article.getBodyText());
-                  text_title.setText(article.getTitleText());
-                  text_abstract.setText(article.getAbstractText());
-                  text_subtitle.setText(article.getSubtitleText());
-                  text_body.setText(article.getBodyText());
-            Logger.log (Logger.INFO,"id pentru a verifica"+id);
-                  save = false;
-
+            text_title.setText(article.getTitleText());
+            text_abstract.setText(article.getAbstractText());
+            text_subtitle.setText(article.getSubtitleText());
+            text_body.setText(article.getBodyText());
+            Logger.log(Logger.INFO, "id pentru a verifica" + id);
+            save = false;
             //The key argument here must match that used in the other activity
         }
 
 
         Article ex = (Article) getIntent().getSerializableExtra("Article");
-        if(ex != null){
+        if (ex != null) {
             articleCreated = ex;
         }
 
-        //Get all data
-     /*   try {
-            ModelManager.saveArticle(ex);
-        } catch (ServerComnmunicationError serverComnmunicationError) {
-            serverComnmunicationError.printStackTrace();
-        }*/
-
-        titleST=text_title.getText().toString();
+        titleST = text_title.getText().toString();
         text_title.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -138,7 +129,7 @@ public class creatArticle extends AppCompatActivity  {
         });
 
 
-        abstractST=text_abstract.getText().toString();
+        abstractST = text_abstract.getText().toString();
         text_abstract.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -157,7 +148,7 @@ public class creatArticle extends AppCompatActivity  {
         });
 
 
-        subtitleST=text_subtitle.getText().toString();
+        subtitleST = text_subtitle.getText().toString();
         text_subtitle.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -176,7 +167,7 @@ public class creatArticle extends AppCompatActivity  {
         });
 
 
-        bodyST=text_body.getText().toString();
+        bodyST = text_body.getText().toString();
         text_body.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -222,28 +213,27 @@ public class creatArticle extends AppCompatActivity  {
         //here we get value
 
     }
-    private void goSave(View v){
-        String user="12";
-        if(isValidated()){
-            articleCreated=new Article(categoryST,titleST,abstractST,bodyST,subtitleST,user);
+
+    private void goSave(View v) {
+        String user = "12";
+        if (isValidated()) {
+            articleCreated = new Article(categoryST, titleST, abstractST, bodyST, subtitleST, user);
             articleCreated.setLastUpdate(date);
 
-                if(save){
-                   SaveArticleTask saveArticleTask = new SaveArticleTask(getApplicationContext(), articleCreated);
-                   saveArticleTask.execute();
-                } else{
-                    UpdateArticleTask updateArticleTask = new UpdateArticleTask(getApplicationContext(), articleCreated, id);
-                    updateArticleTask.execute();
-                    ArticleDB.updateArticle(articleCreated);
-                }
+            if (save) {
+                SaveArticleTask saveArticleTask = new SaveArticleTask(getApplicationContext(), articleCreated);
+                saveArticleTask.execute();
+
+            } else {
+                UpdateArticleTask updateArticleTask = new UpdateArticleTask(getApplicationContext(), articleCreated, id);
+                updateArticleTask.execute();
+                //ArticleDB.updateArticle(articleCreated);
+                //MyArticleModel.updateArticle(articleCreated, articleCreated.getId());
+            }
             ShowPopUp(v);
-//            Intent intentShow= new Intent(getApplicationContext(),PopActivity.class);
-//            //To send Article to PopUp Class
-//            intentShow.putExtra("ArticleCreated", articleCreated);
-//            startActivity(intentShow);
-        }
-        else{
-            Snackbar.make(v,"Please, complete all the fields",Snackbar.LENGTH_LONG).show();
+
+        } else {
+            Snackbar.make(v, "Please, complete all the fields", Snackbar.LENGTH_LONG).show();
         }
     }
 
@@ -283,11 +273,17 @@ public class creatArticle extends AppCompatActivity  {
             @Override
             public void onClick(View v) {
                 //We have to send create Request To API
+                Snackbar.make(v, "Please restart the application", Snackbar.LENGTH_LONG).show();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        //And go to Main Activity
+                        Intent intentMainAct = new Intent(getApplicationContext(), MainActivity.class);
+                        //To send Article to PopUp Class
+                        startActivity(intentMainAct);
+                    }
+                }, 2000);
 
-                //And go to Main Activity
-                Intent intentMainAct= new Intent(getApplicationContext(),MainActivity.class);
-//            //To send Article to PopUp Class
-                startActivity(intentMainAct);
             }
         });
     }

@@ -77,5 +77,8 @@ public class LoadArticlesTask extends AsyncTask<Void, Void, List<Article>> {
     public static int getOffset() {
         return offset;
     }
+    public static void setOffset(int newOffset) {
+        offset=newOffset;
+    }
 }
 

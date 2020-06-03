@@ -2,7 +2,11 @@ package com.example.newsmanagerproject.network;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Build;
 
+import androidx.annotation.RequiresApi;
+
+import com.example.newsmanagerproject.database.ArticleDB;
 import com.example.newsmanagerproject.model.Article;
 import com.example.newsmanagerproject.network.errors.ServerComnmunicationError;
 
@@ -19,11 +23,17 @@ public class SaveArticleTask extends AsyncTask<Void, Void, Void> {
 
 
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected Void doInBackground(Void...voids) {
 
         try {
-            ModelManager.saveArticle(article);
+            int res=ModelManager.saveArticle(article);
+            if(res!=0){
+                Article articleAdd=ModelManager.getArticle(res);
+                ArticleDB.saveNewMessage(articleAdd);
+            }
+
         } catch (ServerComnmunicationError serverComnmunicationError) {
             serverComnmunicationError.printStackTrace();
         }

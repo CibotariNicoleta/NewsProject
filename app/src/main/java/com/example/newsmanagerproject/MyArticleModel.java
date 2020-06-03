@@ -83,4 +83,17 @@ public class MyArticleModel {
         }
         return res;
     }
+
+    public static void deleteArticle(Article articleRemove) {
+        articles.remove(articleRemove);
+    }
+
+    public static void updateArticle(Article updatedArticle, int id) {
+        for (int i = 0; i < articles.size(); i++) {
+            if (articles.get(i).getId() == id) {
+                articles.set(i, updatedArticle);
+            }
+        }
+
+    }
 }
