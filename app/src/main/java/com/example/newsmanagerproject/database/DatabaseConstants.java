@@ -25,7 +25,7 @@ public class DatabaseConstants {
                     "    subtitle TEXT, " +
                     "    imageDescription TEXT, " +
                     "    thumbnail TEXT, " +
-                    "    lastupdate DATE, " +
+                    "    lastupdate INTEGER, " +
                     "    imageData TEXT " +
                     ");";
 

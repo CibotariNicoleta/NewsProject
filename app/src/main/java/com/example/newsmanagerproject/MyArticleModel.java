@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel;
 import com.example.newsmanagerproject.database.ArticleDB;
 import com.example.newsmanagerproject.model.Article;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -22,7 +23,7 @@ public class MyArticleModel {
      * visualize in the view components
      */
 
-    public static List<Article> getArticles() {
+    public static List<Article> getArticles() throws ParseException {
         if (articles == null) {
             articles = new ArrayList<Article>();
             loadArticles();
@@ -34,7 +35,7 @@ public class MyArticleModel {
      * loadArticles(): This method calls getArticles of DB to
      * get articles in 2 ways. From the article server or from article DB.
      */
-    private static void loadArticles() {
+    private static void loadArticles() throws ParseException {
 
         List<Article> aux = new ArrayList<Article>(ArticleDB.getArticles());
         Iterator<Article> iterator = aux.iterator();
@@ -47,7 +48,7 @@ public class MyArticleModel {
      * getMoreArticles(): This method load more articles from DB or
      * article server and add those elements to articles "atribute"
      */
-    public static List<Article> getMoreArticles() {
+    public static List<Article> getMoreArticles() throws ParseException {
         List<Article> aux = new ArrayList<Article>(ArticleDB.getArticles());
         articles.addAll(aux);
         return aux;

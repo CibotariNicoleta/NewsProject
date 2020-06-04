@@ -30,6 +30,7 @@ import com.example.newsmanagerproject.database.ArticleDB;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -54,7 +55,11 @@ public class AllFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        listRes = new ArrayList<>(MyArticleModel.getArticles());
+        try {
+            listRes = new ArrayList<>(MyArticleModel.getArticles());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         //Create handler
         mhandler = new MyHandler();
 
@@ -128,7 +133,12 @@ public class AllFragment extends Fragment {
             //Add footer view
             mhandler.sendEmptyMessage(0);
             //Look for more data
-            List<Article> getList = new ArrayList<Article>(MyArticleModel.getMoreArticles());
+            List<Article> getList = null;
+            try {
+                getList = new ArrayList<Article>(MyArticleModel.getMoreArticles());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
             try {
                 Thread.sleep(2000);
             } catch (InterruptedException e) {

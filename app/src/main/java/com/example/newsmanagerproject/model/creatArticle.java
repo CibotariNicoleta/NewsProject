@@ -61,7 +61,6 @@ public class creatArticle extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 categoryST = spinner.getSelectedItem().toString();
-                Snackbar.make(view, "Item selected -> " + categoryST, Snackbar.LENGTH_LONG).show();
             }
 
             @Override
@@ -85,10 +84,10 @@ public class creatArticle extends AppCompatActivity {
 
 
         //get current time
-        SimpleDateFormat formatter = new SimpleDateFormat(
-                "yyyy-MM-dd HH:mm:ss");
-        date = new Date(System.currentTimeMillis());
-        System.out.println("current time is: " + date);
+//        SimpleDateFormat formatter = new SimpleDateFormat(
+//                "yyyy-MM-dd HH:mm:ss");
+        date = new Date();
+        String currentDateTimeString = java.text.DateFormat.getDateTimeInstance().format(date);
 
         //update article
 

@@ -22,6 +22,7 @@ import com.example.newsmanagerproject.R;
 import com.example.newsmanagerproject.database.ArticleDB;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -43,7 +44,11 @@ public class TechnologyFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.fragment_technology, container, false);
 
-        listRes = MyArticleModel.getArticles();
+        try {
+            listRes = MyArticleModel.getArticles();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
         //Set the footer
         LayoutInflater li = (LayoutInflater) this.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -107,7 +112,12 @@ public class TechnologyFragment extends Fragment {
             mhandler.sendEmptyMessage(0);
 
             //Look for more data
-            List<Article> getList = new ArrayList<Article>(ArticleDB.getArticles());
+            List<Article> getList = null;
+            try {
+                getList = new ArrayList<Article>(ArticleDB.getArticles());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
             getList = MyArticleModel.getListFilter(getList,2);
 
             try {

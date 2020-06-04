@@ -1,5 +1,6 @@
 package com.example.newsmanagerproject.database;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -72,6 +73,8 @@ public class ArticleDB {
                     }
 
                     values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_THUMBNAIL, m.getThumbnail());
+                    String currentDateTimeString = java.text.DateFormat.getDateTimeInstance().format(m.getLastUpdate().getTime());
+                    Log.i("Dato insertta DB","Tiempo-> "+currentDateTimeString);
                     values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_LASTUPDATE, m.getLastUpdate().getTime());
                     try {
                         values.put(DatabaseConstants.DB_TABLE_FIELD_ARTICLE_IMAGEDATA, m.getImage().getIdArticle());
@@ -206,7 +209,7 @@ public class ArticleDB {
      * of 10 items from the database starting
      * from the index indicated by "offset"
      **/
-    public static List<Article> loadArticles() {
+    public static List<Article> loadArticles() throws ParseException {
         SQLiteDatabase db = helper.getReadableDatabase();
         List<Article> resList = new ArrayList<Article>();
         Cursor cursor = db.rawQuery("SELECT * FROM Article_DB LIMIT 10 OFFSET " + offset + ";", null);
@@ -222,13 +225,16 @@ public class ArticleDB {
             String subtitle = cursor.getString(6);
             String ImageDescription = cursor.getString(7);
             String thumbnail = cursor.getString(8);
-            Double lasupdate = cursor.getDouble(9);
+            @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            long date=cursor.getLong(9);
+            String longToString=String.valueOf(date);
+            Date lasupdate = new Date(date);
             String imageData = cursor.getString(10);
 
 
-            long myLong = System.currentTimeMillis() + ((long) (lasupdate * 1000));
-            Date itemDate = new Date(myLong);
-            article.setLastUpdate(itemDate);
+//            long myLong = System.currentTimeMillis() + ((long) (lasupdate * 1000));
+//            Date itemDate = new Date(myLong);
+            article.setLastUpdate(lasupdate);
 
             article.setId(id);
             article.setIdUser(idUser);
@@ -265,7 +271,7 @@ public class ArticleDB {
      * In case that DB has enough articles to load
      * it only returns the articles from DB.
      */
-    public static List<Article> getArticles() {
+    public static List<Article> getArticles() throws ParseException {
         List<Article> res = new ArrayList<>();
         if (LoadArticlesTask.getOffset() < getLength()) {
             res = loadArticles();

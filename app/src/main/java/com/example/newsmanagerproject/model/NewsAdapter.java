@@ -119,8 +119,9 @@ public class NewsAdapter extends ArrayAdapter<Article> {
 
         @SuppressLint("SimpleDateFormat") SimpleDateFormat formatter = new SimpleDateFormat(
                 "yyyy-MM-dd HH:mm:ss");
+        String dateArticle=java.text.DateFormat.getDateTimeInstance().format(article.getLastUpdate())  ;
         EditText date = (EditText) listItem.findViewById(R.id.date_and_time);
-        date.setText(formatter.format(article.getLastUpdate()));
+        date.setText( dateArticle);
 
 
         //onClick method
@@ -176,14 +177,15 @@ public class NewsAdapter extends ArrayAdapter<Article> {
                 delete.execute();
                 ArticleDB.deleteArticle(article);
                 MyArticleModel.deleteArticle(article);
-                notifyDataSetChanged();
+                articles.remove(article);
+                notifyNewsAdapter();
                 Snackbar.make(v.getRootView(),"Deleted with success!",Snackbar.LENGTH_LONG).setActionTextColor(Color.MAGENTA).show();
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         dialog.dismiss();
-                        Intent i = new Intent(mContext.getApplicationContext(), MainActivity.class);
-                        mContext.startActivity(i);
+//                        Intent i = new Intent(mContext.getApplicationContext(), MainActivity.class);
+//                        mContext.startActivity(i);
                     }
                 }, 2000);
             }
@@ -195,6 +197,9 @@ public class NewsAdapter extends ArrayAdapter<Article> {
     public void addArticlesList(List<Article> listArticles) {
         articles.addAll(listArticles);
         //To refresh the list of articles
+        this.notifyDataSetChanged();
+    }
+    private void notifyNewsAdapter(){
         this.notifyDataSetChanged();
     }
 
