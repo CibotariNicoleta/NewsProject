@@ -130,22 +130,16 @@ public class NewsAdapter extends ArrayAdapter<Article> {
             @Override
             public void onClick(View v) {
                 ShowPopUp(v, article);
-               // Intent intent = new Intent(mContext, PopActivityDelete.class);
-                //mContext.startActivity(intent);
-                //Snackbar.make(v,"DeleteButton",Snackbar.LENGTH_SHORT);
             }
         });
 
         modifyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mContext, creatArticle.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("Article", article);
-                intent.putExtras(bundle);
+                Intent intent = new Intent(modifyButton.getContext(), creatArticle.class);
+                intent.putExtra("ModifiedArticle", article);
+                intent.putExtra("ModArticleID",article.getId());
                 mContext.startActivity(intent);
-
-                Snackbar.make(v,"ModifyButton",Snackbar.LENGTH_SHORT);
             }
         });
 
@@ -183,15 +177,15 @@ public class NewsAdapter extends ArrayAdapter<Article> {
                 ArticleDB.deleteArticle(article);
                 MyArticleModel.deleteArticle(article);
                 notifyDataSetChanged();
-                dialog.dismiss();
-                Snackbar.make(v,"Deleted with success!",Snackbar.LENGTH_LONG).setActionTextColor(Color.MAGENTA).show();
+                Snackbar.make(v.getRootView(),"Deleted with success!",Snackbar.LENGTH_LONG).setActionTextColor(Color.MAGENTA).show();
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
+                        dialog.dismiss();
                         Intent i = new Intent(mContext.getApplicationContext(), MainActivity.class);
                         mContext.startActivity(i);
                     }
-                }, 1000);
+                }, 2000);
             }
         });
     }

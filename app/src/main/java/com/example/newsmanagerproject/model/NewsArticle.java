@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Base64;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -69,11 +70,5 @@ public class NewsArticle extends AppCompatActivity {
         } catch (ServerComnmunicationError serverComnmunicationError) {
             serverComnmunicationError.printStackTrace();
         }
-
-        //CharSequence text=category.getText();
-        //Snackbar.make(this,text,Snackbar.LENGTH_SHORT).show();
-
-
-
     }
 }

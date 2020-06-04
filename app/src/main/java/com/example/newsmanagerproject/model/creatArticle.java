@@ -91,19 +91,18 @@ public class creatArticle extends AppCompatActivity {
         System.out.println("current time is: " + date);
 
         //update article
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
+
+        if (getIntent().hasExtra("ModifiedArticle")) {
             //String jsonArticle = extras.getString("Article");
-            Article article = (Article) extras.getSerializable("Article");
+            Article article = (Article) getIntent().getSerializableExtra("ModifiedArticle");
             text_title.setText(article.getTitleText());
             text_abstract.setText(article.getAbstractText());
             text_subtitle.setText(article.getSubtitleText());
             text_body.setText(article.getBodyText());
-            Logger.log(Logger.INFO, "id pentru a verifica" + id);
+            id=(int)getIntent().getSerializableExtra("ModArticleID");
             save = false;
             //The key argument here must match that used in the other activity
         }
-
 
         Article ex = (Article) getIntent().getSerializableExtra("Article");
         if (ex != null) {
@@ -208,10 +207,6 @@ public class creatArticle extends AppCompatActivity {
                 }, 1000);
             }
         });
-
-
-        //here we get value
-
     }
 
     private void goSave(View v) {
@@ -225,10 +220,9 @@ public class creatArticle extends AppCompatActivity {
                 saveArticleTask.execute();
 
             } else {
-                UpdateArticleTask updateArticleTask = new UpdateArticleTask(getApplicationContext(), articleCreated, id);
+                articleCreated.setId(id);
+                UpdateArticleTask updateArticleTask = new UpdateArticleTask(getApplicationContext(), articleCreated);
                 updateArticleTask.execute();
-                //ArticleDB.updateArticle(articleCreated);
-                //MyArticleModel.updateArticle(articleCreated, articleCreated.getId());
             }
             ShowPopUp(v);
 
@@ -273,14 +267,11 @@ public class creatArticle extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //We have to send create Request To API
-                Snackbar.make(v, "Please restart the application", Snackbar.LENGTH_LONG).show();
+                Snackbar.make(v, "Success in executed action!", Snackbar.LENGTH_LONG).show();
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        //And go to Main Activity
-                        Intent intentMainAct = new Intent(getApplicationContext(), MainActivity.class);
-                        //To send Article to PopUp Class
-                        startActivity(intentMainAct);
+                        myDialog.dismiss();
                     }
                 }, 2000);
 
